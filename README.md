@@ -3,7 +3,7 @@ This branch is only for "valgrind_memcheck_bug_report_on_copy_stack_coroutine" p
 To progress:
 
 ```bash
-$ git clone -b tencent_libco_bug_report_and_coctx_swap_benchmark https://github.com/hnes/libaco.git
+$ git clone -b valgrind_memcheck_bug_report_on_copy_stack_coroutine https://github.com/hnes/libaco.git
 $ cd libaco
 $ # require gcc >= 5.0 to progress
 $ bash valgrind_report_make.sh
