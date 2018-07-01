@@ -30,11 +30,11 @@
 
 #ifdef __i386__
     #define ACO_REG_IDX_RETADDR 0
-    #define ACO_REG_IDX_SP 1
+    #define ACO_REG_IDX_SP 7
     #define ACO_REG_IDX_FPU 6
 #elif __x86_64__
-    #define ACO_REG_IDX_RETADDR 4
-    #define ACO_REG_IDX_SP 5
+    #define ACO_REG_IDX_RETADDR 9
+    #define ACO_REG_IDX_SP 13
     #define ACO_REG_IDX_FPU 8
 #else
     #error "platform no support yet"
@@ -79,15 +79,15 @@ struct aco_s__{
     // cpu registers' state
 #ifdef __i386__
     #ifdef ACO_CONFIG_SHARE_FPU_MXCSR_ENV
-        void*  reg[6];
+        void*  reg[8];
     #else
         void*  reg[8];
     #endif
 #elif __x86_64__
     #ifdef ACO_CONFIG_SHARE_FPU_MXCSR_ENV
-        void*  reg[8];
+        void*  reg[14];
     #else
-        void*  reg[9];
+        void*  reg[14];
     #endif
 #else
     #error "platform no support yet"
@@ -134,7 +134,7 @@ extern void aco_thread_init(aco_cofuncp_t last_word_co_fp);
 // to accelerate acosw and copystack(-8bytes), and PR is welcome :)
 extern void* acosw(aco_t* from_co, aco_t* to_co); // asm
 
-extern void aco_save_fpucw_mxcsr(void* p);  // asm
+__attribute__ ((unused)) extern void aco_save_fpucw_mxcsr(void* p);
 
 extern aco_share_stack_t* aco_share_stack_new(size_t sz);
 

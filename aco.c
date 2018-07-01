@@ -165,15 +165,19 @@ __thread aco_t* aco_gtls_co;
 static __thread aco_cofuncp_t aco_gtls_last_word_fp = aco_default_protector_last_word;
 
 #ifdef __i386__
-    static __thread void* aco_gtls_fpucw_mxcsr[2];
+    static __thread void* aco_gtls_fpucw_mxcsr[2] __attribute__ ((unused));
 #elif  __x86_64__    
-    static __thread void* aco_gtls_fpucw_mxcsr[1];
+    static __thread void* aco_gtls_fpucw_mxcsr[1] __attribute__ ((unused));
 #else
     #error "platform no support yet"
 #endif
 
+__attribute__ ((unused)) void aco_save_fpucw_mxcsr(void* p){
+    assert(0);
+}
+
 void aco_thread_init(aco_cofuncp_t last_word_co_fp){
-    aco_save_fpucw_mxcsr(aco_gtls_fpucw_mxcsr);
+    //aco_save_fpucw_mxcsr(aco_gtls_fpucw_mxcsr);
 
     if((void*)last_word_co_fp != NULL)
         aco_gtls_last_word_fp = last_word_co_fp;

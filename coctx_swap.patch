@@ -1,0 +1,12 @@
+19c19
+< .globl coctx_swap
+---
+> .globl acosw
+21c21
+< .type  coctx_swap, @function
+---
+> .type  acosw, @function
+23c23
+< coctx_swap:
+---
+> acosw:
