@@ -28,7 +28,6 @@ script:
     - ls /usr/include
     - ls /usr/include/valgrind
     - date
-    - mkdir output
-    - bash make.sh
-    - cd output
-    - bash ../test.sh
+    - bash libco_bug_build.sh
+    - ./test_m32_libco_benchmark
+    - ./test_libco_benchmark
