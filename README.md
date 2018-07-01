@@ -10,6 +10,10 @@ Support Sys V ABI of Intel386 and x86-64 currently.
 
 Issues and PRs are welcome 🎉🎉🎉
 
+[![Build Status Travis](https://img.shields.io/travis/hnes/libaco.svg?style=flat-square&&branch=master)](https://travis-ci.org/hnes/libaco)
+[![Releases](https://img.shields.io/github/release/hnes/libaco/all.svg?style=flat-square)](https://github.com/hnes/libaco/releases)
+[![LICENSE](https://img.shields.io/github/license/hnes/libaco.svg?style=flat-square)](https://github.com/hnes/libaco/blob/master/LICENSE)
+
 # Table of Content
 
    * [Name](#name)
