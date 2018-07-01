@@ -42,6 +42,7 @@ Issues and PRs are welcome 🎉🎉🎉
          * [Red Zone](#red-zone)
          * [Stack Pointer](#stack-pointer)
    * [Best Practice](#best-practice)
+   * [TODO](#todo)
    * [Donation](#donation)
 * [Copyright and License](#copyright-and-license)
 
@@ -822,6 +823,10 @@ void co_fp1() {
     aco_exit();
 }
 ```
+
+# TODO
+
+* Remove the restrictions on the GCC version (>= 5.0 currently).
 
 # Donation
 
