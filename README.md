@@ -2,7 +2,74 @@ This branch is only for "tencent_libco_bug_report_and_coctx_swap_benchmark" purp
 
 The initial issue is at [libco issue 90](https://github.com/Tencent/libco/issues/90).
 
-Moreover, the [benchmark](#benchmark) part also shows that our libaco's context switching assembly implementation `acosw` is also **1.72x faster** than Tencent libco's `coctx_swap`.
+Moreover, the [benchmark](#benchmark) part also shows that our [libaco's](https://github.com/hnes/libaco/tree/v1.0#benchmark) context switching assembly implementation `acosw` is also **1.72x faster** than [Tencent libco's](https://github.com/hnes/libaco/tree/tencent_libco_bug_report_and_coctx_swap_benchmark#benchmark) `coctx_swap` (pure context switching performance).
+
+To reproduce the bug [libco issue 90](https://github.com/Tencent/libco/issues/90):
+
+```bash
+$ git clone -b tencent_libco_bug_report_and_coctx_swap_benchmark https://github.com/hnes/libaco.git
+$ cd libaco
+$ # require gcc >= 5.0 to progress
+$ bash libco_bug_build.sh
+$ ls *libco_bug_0
+test_libco_bug_0  test_m32_libco_bug_0
+$ # use objdump find the address of coctx_swap in test_m32_libco_bug_0
+08048786 <acosw>:
+ 8048786:       8d 44 24 04             lea    eax,[esp+0x4]
+ 804878a:       8b 64 24 04             mov    esp,DWORD PTR [esp+0x4]
+ 804878e:       8d 64 24 20             lea    esp,[esp+0x20]
+ 8048792:       50                      push   eax
+ 8048793:       55                      push   ebp
+ 8048794:       56                      push   esi    # <- breakpoint we would use later
+ 8048795:       57                      push   edi
+ 8048796:       52                      push   edx
+ 8048797:       51                      push   ecx
+ 8048798:       53                      push   ebx
+ 8048799:       ff 70 fc                push   DWORD PTR [eax-0x4]
+ 804879c:       8b 60 04                mov    esp,DWORD PTR [eax+0x4]
+ 804879f:       58                      pop    eax
+ 80487a0:       5b                      pop    ebx
+ 80487a1:       59                      pop    ecx
+ 80487a2:       5a                      pop    edx
+ 80487a3:       5f                      pop    edi
+ 80487a4:       5e                      pop    esi
+ 80487a5:       5d                      pop    ebp
+ 80487a6:       5c                      pop    esp
+ 80487a7:       50                      push   eax
+ 80487a8:       31 c0                   xor    eax,eax
+ 80487aa:       c3                      ret
+$ gdb ./test_m32_libco_bug_0
+...
+(gdb) break *0x8048794
+Breakpoint 1 at 0x8048794: file coctx_swap.S, line 33.
+(gdb) r
+Starting program: /mnt/shr/codes/libaco/test_m32_libco_bug_0
+main: sp:0xffffd1c8    ####<<<<!!!! main stack pointer
+
+Breakpoint 1, acosw () at coctx_swap.S:33
+33              pushl %esi
+Missing separate debuginfos, use: debuginfo-install glibc-2.17-222.el7.i686
+(gdb) bt
+#0  acosw () at coctx_swap.S:33
+#1  0xffffd1c8 in ?? ()
+#2  0xf7e121b3 in __libc_start_main () from /lib/libc.so.6
+#3  0xf7ffcfbc in _DYNAMIC () from /lib/ld-linux.so.2
+#4  0x00000001 in ?? ()
+#5  0x08048693 in main () at test_libco_bug_0.c:61
+(gdb) signal SIGINT
+Continuing with signal SIGINT.
+Received interrupt signal!
+signal: sp:0x804b968         ####<<<<!!!! signal stack pointer -> HEAP!!! BUG!!!
+signal: co:0x804c088 save_stack:0x804c0d8 share_stack:0xf7bf7000
+signal: exit  ####^<<<<!!!! `co` is on the heap
+
+Breakpoint 1, acosw () at coctx_swap.S:33
+33              pushl %esi
+(gdb)
+$ # same amd64 version, i.e. the test_libco_bug_0
+```
+
+
 
 ------
 
