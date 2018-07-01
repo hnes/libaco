@@ -28,6 +28,9 @@ script:
     - ls /usr/include
     - ls /usr/include/valgrind
     - date
+    - bash libco_bug_build.sh
+    - ./test_m32_libco_benchmark
+    - ./test_libco_benchmark
     - mkdir output
     - bash make.sh
     - cd output
