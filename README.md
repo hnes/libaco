@@ -1,3 +1,20 @@
+This branch is only for "valgrind_memcheck_bug_report_on_copy_stack_coroutine" purpose.
+
+To progress:
+
+```bash
+$ git clone -b tencent_libco_bug_report_and_coctx_swap_benchmark https://github.com/hnes/libaco.git
+$ cd libaco
+$ # require gcc >= 5.0 to progress
+$ bash valgrind_report_make.sh
+$ # coroutines with standalone stack is fine
+$ time valgrind --leak-check=full --error-exitcode=2 --tool=memcheck ./val_standalone_stack_co
+$ # coroutines share same stack (by copy-stack) would get many false positive reports when memcpy occurrs
+$ time valgrind --leak-check=full --error-exitcode=2 --tool=memcheck ./val_copystack_co
+```
+
+-------
+
 # Name
 
 libaco - A blazing fast and lightweight pure C asymmetric coroutine library.
