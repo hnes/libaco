@@ -28,6 +28,10 @@ script:
     - ls /usr/include
     - ls /usr/include/valgrind
     - date
+    - ls -hl
     - bash libco_bug_build.sh
+    - ls -hl
+    - gcc -c coctx_swap.S -o coctx_swap.o
+    - objdump -Mintel -d coctx_swap.o
     - ./test_m32_libco_benchmark
     - ./test_libco_benchmark
