@@ -135,3 +135,24 @@ aco_save_fpucw_mxcsr:
 #else
     #error "platform not support"
 #endif
+
+.globl abort
+.globl aco_funcp_protector
+
+.globl aco_funcp_protector_asm
+.type  aco_funcp_protector_asm, @function
+.intel_syntax noprefix
+aco_funcp_protector_asm:
+#ifdef __i386__
+    and     esp,0xfffffff0
+    call    aco_funcp_protector
+    call    abort
+    ret
+#elif __x86_64__
+    and     rsp,0xfffffffffffffff0
+    call    aco_funcp_protector
+    call    abort
+    ret
+#else
+    #error "platform not support"
+#endif

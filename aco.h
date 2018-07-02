@@ -136,6 +136,10 @@ extern void* acosw(aco_t* from_co, aco_t* to_co); // asm
 
 extern void aco_save_fpucw_mxcsr(void* p);  // asm
 
+extern void aco_funcp_protector_asm(); // asm
+
+extern void aco_funcp_protector();
+
 extern aco_share_stack_t* aco_share_stack_new(size_t sz);
 
 aco_share_stack_t* aco_share_stack_new2(size_t sz, char guard_page_enabled);

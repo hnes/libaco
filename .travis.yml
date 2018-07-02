@@ -16,14 +16,11 @@ install:
     - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
     - sudo apt-get update
     - sudo apt-key update
-    - sudo apt-get install -y gcc-7 gcc-7-multilib 
-    - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 60 --slave /usr/bin/gcc-ar gcc-ar /usr/bin/gcc-ar-7 --slave /usr/bin/gcc-nm gcc-nm /usr/bin/gcc-nm-7 --slave /usr/bin/gcc-ranlib gcc-ranlib /usr/bin/gcc-ranlib-7
     
 script:
     - echo $TRAVIS_EVENT_TYPE
     - ulimit -c unlimited
     - cat /proc/cpuinfo && free -m && uname -a
-    - gcc-7 --version
     - gcc --version
     - ls /usr/include
     - ls /usr/include/valgrind

@@ -183,10 +183,7 @@ void aco_thread_init(aco_cofuncp_t last_word_co_fp){
 // called. If it's been called, that means the offending 
 // `co` didn't call aco_exit(co) instead of `return` to
 // finish its execution.
-// It is important to use `force_align_arg_pointer` to
-// tell the compiler to realign the stack since the args 
-// alignment on the stack is not 16 bytes anymore.
-static void __attribute__((force_align_arg_pointer)) aco_funcp_protector(){
+void aco_funcp_protector(){
     if((void*)(aco_gtls_last_word_fp) != NULL){
         aco_gtls_last_word_fp();
     }else{
@@ -276,7 +273,7 @@ aco_share_stack_t* aco_share_stack_new2(size_t sz, char guard_page_enabled){
     u_p = (u_p >> 4) << 4;
     p->align_highptr = (void*)u_p;
     p->align_retptr  = (void*)(u_p - sizeof(void*)); 
-    *((void**)(p->align_retptr)) = (void*)(aco_funcp_protector);
+    *((void**)(p->align_retptr)) = (void*)(aco_funcp_protector_asm);
     assert(p->sz > (16 + (sizeof(void*) << 1) + sizeof(void*)));
     p->align_limit = p->sz - 16 - (sizeof(void*) << 1);
 #else
