@@ -14,7 +14,7 @@ Issues and PRs are welcome 🎉🎉🎉
 [![Releases](https://img.shields.io/github/release/hnes/libaco/all.svg?style=flat-square)](https://github.com/hnes/libaco/releases)
 [![LICENSE](https://img.shields.io/github/license/hnes/libaco.svg?style=flat-square)](https://github.com/hnes/libaco/blob/master/LICENSE)
 
-Note: Please use [releases][github-release] instead of the `master` to build the final production binary.
+Note: Please use [releases][github-release] instead of the `master` to build the final binary.
 
 [github-release]: https://github.com/hnes/libaco/releases
 
@@ -835,6 +835,8 @@ void co_fp1() {
 # TODO
 
 New ideas are welcome!
+
+- [ ] Provide another header `aco_assert.h` so user could choose to override the default `assert` or not.
 
 # CHANGES
 
