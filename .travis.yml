@@ -21,7 +21,7 @@ script:
     - echo $TRAVIS_EVENT_TYPE
     - ulimit -c unlimited
     - cat /proc/cpuinfo && free -m && uname -a
-    - gcc --version
+    - cc --version
     - ls /usr/include
     - ls /usr/include/valgrind
     - date
