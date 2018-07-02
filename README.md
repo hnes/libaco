@@ -47,6 +47,7 @@ Issues and PRs are welcome 🎉🎉🎉
          * [Stack Pointer](#stack-pointer)
    * [Best Practice](#best-practice)
    * [TODO](#todo)
+   * [CHANGES](#changes)
    * [Donation](#donation)
 * [Copyright and License](#copyright-and-license)
 
@@ -111,7 +112,6 @@ int main() {
 }
 ```
 ```bash
-# require gcc version >= 5.0
 # default build
 $ gcc -g -O2 acosw.S aco.c test_aco_synopsis.c -o test_aco_synopsis
 $ ./test_aco_synopsis
@@ -830,7 +830,16 @@ void co_fp1() {
 
 # TODO
 
-* Remove the restrictions on the GCC version (>= 5.0 currently).
+New ideas are welcome!
+
+# CHANGES
+
+```
+v1.1 @ Mon Jul 2 2018
+    Removed the requirement on the GCC version (>= 5.0).
+v1.0 @ Sun Jul 1 2018
+    The v1.0 release of libaco, cheers 🎉🎉🎉
+```
 
 # Donation
 
