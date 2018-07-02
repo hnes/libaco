@@ -14,6 +14,10 @@ Issues and PRs are welcome 🎉🎉🎉
 [![Releases](https://img.shields.io/github/release/hnes/libaco/all.svg?style=flat-square)](https://github.com/hnes/libaco/releases)
 [![LICENSE](https://img.shields.io/github/license/hnes/libaco.svg?style=flat-square)](https://github.com/hnes/libaco/blob/master/LICENSE)
 
+Note: Please use [releases][github-release] instead of the `master` to build the final production binary.
+
+[github-release]: https://github.com/hnes/libaco/releases
+
 # Table of Content
 
    * [Name](#name)
