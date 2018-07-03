@@ -22,6 +22,8 @@ script:
     - ulimit -c unlimited
     - cat /proc/cpuinfo && free -m && uname -a
     - cc --version
+    - gcc --version
+    - echo $CC
     - ls /usr/include
     - ls /usr/include/valgrind
     - date
