@@ -379,11 +379,14 @@ This 3 macros are defined in the header `aco.h` and the value of them follows th
 // provide the compiler with branch prediction information
 #define likely(x)               aco_likely(x)
 #define unlikely(x)             aco_unlikely(x)
+
 // override the default `assert` for convenience when coding
 #define assert(EX)              aco_assert(EX)
+
 // equal to `assert((ptr) != NULL)`
 #define assertptr(ptr)          aco_assertptr(ptr)
-// assertalloc_* use to assert the successful return of memory allocation
+
+// assert the successful return of memory allocation
 #define assertalloc_bool(b)     aco_assertalloc_bool(b)
 #define assertalloc_ptr(ptr)    aco_assertalloc_ptr(ptr)
 ```
@@ -873,8 +876,6 @@ void co_fp1() {
 # TODO
 
 New ideas are welcome!
-
-- [ ] Provide another header `aco_assert.h` so user could choose to override the default `assert` or not.
 
 # CHANGES
 
