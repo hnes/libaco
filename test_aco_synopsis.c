@@ -14,6 +14,7 @@
 
 #include "aco.h"    
 #include <stdio.h>
+#include "aco_assert_override.h"
 
 void foo(int ct) {
     printf("co: %p: yield to main_co: %d\n", aco_get_co(), *((int*)(aco_get_arg())));

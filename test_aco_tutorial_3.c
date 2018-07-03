@@ -20,6 +20,7 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <inttypes.h>
+#include "aco_assert_override.h"
 
 uint64_t gl_race_aco_yield_ct = 0;
 pthread_mutex_t gl_race_aco_yield_ct_mutex = PTHREAD_MUTEX_INITIALIZER;

@@ -24,6 +24,10 @@
 #include <time.h>
 #include <sys/mman.h>
 
+#define ACO_VERSION_MAJOR 1
+#define ACO_VERSION_MINOR 2
+#define ACO_VERSION_PATCH 0
+
 #ifdef ACO_USE_VALGRIND
     #include <valgrind/valgrind.h>
 #endif
@@ -102,31 +106,31 @@ struct aco_s__{
     aco_share_stack_t* share_stack;
 };
 
-#define likely(x) (__builtin_expect(!!(x), 1))
+#define aco_likely(x) (__builtin_expect(!!(x), 1))
 
-#define unlikely(x) (__builtin_expect(!!(x), 0))
+#define aco_unlikely(x) (__builtin_expect(!!(x), 0))
 
-#define assert(EX)  ((likely(EX))?((void)0):(abort()))
+#define aco_assert(EX)  ((aco_likely(EX))?((void)0):(abort()))
 
-#define assertptr(ptr)  ((likely((ptr) != NULL))?((void)0):(abort()))
+#define aco_assertptr(ptr)  ((aco_likely((ptr) != NULL))?((void)0):(abort()))
 
-#define assertalloc_bool(b)  do {  \
-    if(unlikely(!(b))){    \
+#define aco_assertalloc_bool(b)  do {  \
+    if(aco_unlikely(!(b))){    \
         fprintf(stderr, "Aborting: failed to allocate memory: %s:%d:%s\n", \
             __FILE__, __LINE__, __PRETTY_FUNCTION__);    \
         abort();    \
     }   \
 } while(0)
 
-#define assertalloc_ptr(ptr)  do {  \
-    if(unlikely((ptr) == NULL)){    \
+#define aco_assertalloc_ptr(ptr)  do {  \
+    if(aco_unlikely((ptr) == NULL)){    \
         fprintf(stderr, "Aborting: failed to allocate memory: %s:%d:%s\n", \
             __FILE__, __LINE__, __PRETTY_FUNCTION__);    \
         abort();    \
     }   \
 } while(0)
 
-extern void aco_assert();
+extern void aco_runtime_test();
 
 extern void aco_thread_init(aco_cofuncp_t last_word_co_fp);
 
@@ -160,8 +164,8 @@ extern void aco_resume(aco_t* resume_co);
 
 //extern void aco_yield1(aco_t* yield_co);
 #define aco_yield1(yield_co) do {             \
-    assertptr((yield_co));                    \
-    assertptr((yield_co)->main_co);           \
+    aco_assertptr((yield_co));                    \
+    aco_assertptr((yield_co)->main_co);           \
     acosw((yield_co), (yield_co)->main_co);   \
 } while(0)
 
@@ -181,11 +185,11 @@ extern void aco_destroy(aco_t* co);
 
 #define aco_exit1(co) do {     \
     (co)->is_end = 1;           \
-    assert((co)->share_stack->owner == (co)); \
+    aco_assert((co)->share_stack->owner == (co)); \
     (co)->share_stack->owner = NULL; \
     (co)->share_stack->align_validsz = 0; \
     aco_yield1((co));            \
-    assert(0);                  \
+    aco_assert(0);                  \
 } while(0)
 
 #define aco_exit() do {       \

@@ -17,6 +17,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
+#include "aco_assert_override.h"
 
 aco_cofuncp_t gl_co_fp;
 

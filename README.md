@@ -42,6 +42,7 @@ Note: Please use [releases][github-release] instead of the `master` to build the
       * [aco_get_arg](#aco_get_arg)
       * [aco_exit](#aco_exit)
       * [aco_destroy](#aco_destroy)
+      * [MACROS](#macros)
    * [Benchmark](#benchmark)
    * [Proof of Correctness](#proof-of-correctness)
       * [Running Model](#running-model)
@@ -64,6 +65,10 @@ Production ready.
 ```c
 #include "aco.h"    
 #include <stdio.h>
+
+// this header would override the default C `assert`;
+// you may refer the "API : MACROS" part for more details.
+#include "aco_assert_override.h"
 
 void foo(int ct) {
     printf("co: %p: yield to main_co: %d\n", aco_get_co(), *((int*)(aco_get_arg())));
@@ -222,6 +227,8 @@ The last example is a simple coroutine scheduler in `test_aco_tutorial_6.c`.
 
 It would be very helpful to read the corresponding API implementation in the source code simultaneously when you are reading the following API description of libaco since the source code is pretty clear and easy to understand. And it is also recommended to read all the [tutorials](#tutorials) before reading the API document.
 
+Note: The version control of libaco follows the spec: [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html). So the API in the following list have the compatibility guarantee. (Please note that there is no such guarantee for the API no in the list.)
+
 ## aco_thread_init
 
 ```c
@@ -353,6 +360,37 @@ void aco_destroy(aco_t* co);
 ```
 
 Destroy the `co`. The argument `co` must not be NULL. The private save stack would also been destroyed if the `co` is a non-main co.
+
+## MACROS
+
+### Version
+
+```c
+#define ACO_VERSION_MAJOR 1
+#define ACO_VERSION_MINOR 2
+#define ACO_VERSION_PATCH 0
+```
+
+This 3 macros are defined in the header `aco.h` and the value of them follows the spec: [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html).
+
+### aco_assert_override.h
+
+```c
+// provide the compiler with branch prediction information
+#define likely(x)               aco_likely(x)
+#define unlikely(x)             aco_unlikely(x)
+// override the default `assert` for convenience when coding
+#define assert(EX)              aco_assert(EX)
+// equal to `assert((ptr) != NULL)`
+#define assertptr(ptr)          aco_assertptr(ptr)
+// assertalloc_* use to assert the successful return of memory allocation
+#define assertalloc_bool(b)     aco_assertalloc_bool(b)
+#define assertalloc_ptr(ptr)    aco_assertalloc_ptr(ptr)
+```
+
+You could choose to include the header `"aco_assert_override.h"` to override the default C "[assert](http://man7.org/linux/man-pages/man3/assert.3.html)" in the libaco application like [test_aco_synopsis.c](test_aco_synopsis.c) does (this header including should be at the last of the include directives list in the source file because the C "[assert](http://man7.org/linux/man-pages/man3/assert.3.html)" is a C macro definition too). Please do not include this header in the application source file if you want to use the default C "[assert](http://man7.org/linux/man-pages/man3/assert.3.html)".
+
+For more details you may refer to the source file [aco_assert_override.h](aco_assert_override.h).
 
 # Benchmark
 
@@ -841,6 +879,10 @@ New ideas are welcome!
 # CHANGES
 
 ```
+v1.2.0 Tue Jul 3 2018
+    Provide another header named `aco_assert_override.h` so user
+    could choose to override the default `assert` or not;
+    Add some macros about the version information.
 v1.1 @ Mon Jul 2 2018
     Removed the requirement on the GCC version (>= 5.0).
 v1.0 @ Sun Jul 1 2018

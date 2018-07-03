@@ -19,6 +19,8 @@
 #include <stdio.h>
 #include <unistd.h>
 
+#include "aco_assert_override.h"
+
 void foo(int ct){
     printf(
         "co:%p save_stack:%p share_stack:%p yield_ct:%d\n",

@@ -13,8 +13,13 @@
 // limitations under the License.
 
 #include "aco.h"
+#include<stdio.h>
+#include<stdint.h>
 
-void aco_assert(){
+// this header including should be at the last of the `include` directives list
+#include "aco_assert_override.h"
+
+void aco_runtime_test(){
 #ifdef __i386__
     _Static_assert(sizeof(void*) == 4, "require 'sizeof(void*) == 4'");
 #elif  __x86_64__    
@@ -30,8 +35,6 @@ void aco_assert(){
     assert(sizeof(int) <= sizeof(size_t));
 }
 
-#include<stdio.h>
-#include<stdint.h>
 // assertptr(dst); assertptr(src);
 // assert((((uintptr_t)(src) & 0x0f) == 0) && (((uintptr_t)(dst) & 0x0f) == 0));
 // assert((((sz) & 0x0f) == 0x08) && (((sz) >> 4) >= 0) && (((sz) >> 4) <= 8));

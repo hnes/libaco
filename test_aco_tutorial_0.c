@@ -18,6 +18,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
+#include "aco_assert_override.h"
 
 void co_fp0() {
     // Get co->arg. The caller of `aco_get_arg()` must be a non-main co.

@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
+#include "aco_assert_override.h"
 
 void foo(int ct){
     printf(
