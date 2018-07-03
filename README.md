@@ -391,7 +391,7 @@ This 3 macros are defined in the header `aco.h` and the value of them follows th
 #define assertalloc_ptr(ptr)    aco_assertalloc_ptr(ptr)
 ```
 
-You could choose to include the header `"aco_assert_override.h"` to override the default C "[assert](http://man7.org/linux/man-pages/man3/assert.3.html)" in the libaco application like [test_aco_synopsis.c](test_aco_synopsis.c) does (this header including should be at the last of the include directives list in the source file because the C "[assert](http://man7.org/linux/man-pages/man3/assert.3.html)" is a C macro definition too). Please do not include this header in the application source file if you want to use the default C "[assert](http://man7.org/linux/man-pages/man3/assert.3.html)".
+You could choose to include the header `"aco_assert_override.h"` to override the default C "[assert](http://man7.org/linux/man-pages/man3/assert.3.html)" in the libaco application like [test_aco_synopsis.c](test_aco_synopsis.c) does (this header including should be at the last of the include directives list in the source file because the C "[assert](http://man7.org/linux/man-pages/man3/assert.3.html)" is a C macro definition too) and define the 5 other macros in the above. Please do not include this header in the application source file if you want to use the default C "[assert](http://man7.org/linux/man-pages/man3/assert.3.html)".
 
 For more details you may refer to the source file [aco_assert_override.h](aco_assert_override.h).
 
