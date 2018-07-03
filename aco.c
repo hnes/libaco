@@ -13,8 +13,8 @@
 // limitations under the License.
 
 #include "aco.h"
-#include<stdio.h>
-#include<stdint.h>
+#include <stdio.h>
+#include <stdint.h>
 
 // this header including should be at the last of the `include` directives list
 #include "aco_assert_override.h"
