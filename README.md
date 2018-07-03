@@ -399,7 +399,7 @@ For more details you may refer to the source file [aco_assert_override.h](aco_as
 
 Date: Sat Jun 30 UTC 2018.
 
-Machine: c5d.large on [AWS](https://aws.amazon.com/cn/blogs/aws/ec2-instance-update-c5-instances-with-local-nvme-storage-c5d/).
+Machine: [c5d.large on AWS](https://aws.amazon.com/cn/blogs/aws/ec2-instance-update-c5-instances-with-local-nvme-storage-c5d/).
 
 OS: RHEL-7.5 (Red Hat Enterprise Linux 7.5).
 
