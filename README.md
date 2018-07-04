@@ -175,7 +175,7 @@ Finally, we get the big picture of libaco.
 
 There is a "[Proof of Correctness](#proof-of-correctness)" part you may find really helpful if you want to dive into the internal of libaco or want to implement your own coroutine library.
 
-It is also highly recommended to read the source code of the tutorials and benchmark next. The benchmark result is very impressive and enlightening too.
+It is also highly recommended to read the source code of the tutorials and benchmark next. The [benchmark](#benchmark) result is very impressive and enlightening too.
 
 # Build and Test
 
@@ -402,6 +402,12 @@ Date: Sat Jun 30 UTC 2018.
 Machine: [c5d.large on AWS](https://aws.amazon.com/cn/blogs/aws/now-available-compute-intensive-c5-instances-for-amazon-ec2/).
 
 OS: RHEL-7.5 (Red Hat Enterprise Linux 7.5).
+
+Here is a brief summary of the benchmark part:
+
+* One time of the context switching between coroutines only takes about **10.29 ns** (for the case of standalone stack, sharing x87 and mxcsr control words between coroutines);
+* One time of the context switching between coroutines only takes about **10.38 ns** (for the case of standalone stack, each coroutine maintaining each own x87 and mxcsr control words);
+* It has the extremely memory efficiency: **10,000,000** amount of coroutines simultaneously to run only cost **2.8 GB** physical memory (run with tcmalloc, each coroutine has a **120 bytes** copy-stack size configuration).
 
 ```
 $ LD_PRELOAD=/usr/lib64/libtcmalloc_minimal.so.4 ./test_aco_benchmark..no_valgrind.shareFPUenv
