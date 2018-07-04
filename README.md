@@ -877,6 +877,8 @@ void co_fp1() {
 
 New ideas are welcome!
 
+- [ ] Support other platforms (especially arm & arm64).
+
 # CHANGES
 
 ```
