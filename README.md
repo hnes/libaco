@@ -743,7 +743,7 @@ Registers' usage in the calling convention of the Intel386 System V ABI:
 
 The diagram above is for the 1st case: "yielded state co -> init state co".
 
-Constraints: C 1.0, 1.1, 1.2, 1.5 (*satisfied* √ )
+Constraints: C 1.0, 1.1, 1.2, 1.5 (*satisfied* ✓ )
 
 The scratch registers below can hold any value at the entry of a function:
 
@@ -753,11 +753,11 @@ XMM*,YMM*,MM*,K*...
 status bits of EFLAGS,FPU,MXCSR
 ```
 
-Constraints: C 1.3, 1.4 (*satisfied* √ )
+Constraints: C 1.3, 1.4 (*satisfied* ✓ )
 
 Since the stack of FPU must already be empty and the DF must already be 0 before `acosw(co, to_co)` was called (the binary code of co is already complied to the ABI), the constraint 1.3 and 1.4 is complied by `acosw`.
 
-Constraints: C 2.0, 2.1, 2.2 (*satisfied* √ )
+Constraints: C 2.0, 2.1, 2.2 (*satisfied* ✓ )
 
 C 2.0 & 2.1 is already satisfied. Since we already assumed that nobody will change the control words of FPU and MXCSR, C 2.2 is satisfied too.
 
@@ -767,11 +767,11 @@ C 2.0 & 2.1 is already satisfied. Since we already assumed that nobody will chan
 
 The diagram above is for the 2nd case: yielded state co -> yielded state co.
 
-Constraints: C 1.0 (*satisfied* √ )
+Constraints: C 1.0 (*satisfied* ✓ )
 
 EAX already holding the return value when `acosw` returns back to to_co (resume).
 
-Constraints: C 1.1, 1.2, 1.5 (*satisfied* √ )
+Constraints: C 1.1, 1.2, 1.5 (*satisfied* ✓ )
 
 The scratch registers below can hold any value at the entry of a function and after the return of `acosw`:
 
@@ -781,11 +781,11 @@ XMM*,YMM*,MM*,K*...
 status bits of EFLAGS,FPU,MXCSR
 ```
 
-Constraints: C 1.3, 1.4 (*satisfied* √ )
+Constraints: C 1.3, 1.4 (*satisfied* ✓ )
 
 Since the stack of FPU must already be empty and the DF must already be 0 before `acosw(co, to_co)` was called (the binary code of co is already complied to the ABI), the constraint 1.3 and 1.4 is complied by `acosw`.
 
-Constraints: C 2.0, 2.1, 2.2 (*satisfied* √ )
+Constraints: C 2.0, 2.1, 2.2 (*satisfied* ✓ )
 
 C 2.0 & 2.1 is satisfied because there is saving & restoring of the callee saved registers when `acosw` been called/returned. Since we already assumed that nobody will change the control words of FPU and MXCSR, C 2.2 is satisfied too.
 
