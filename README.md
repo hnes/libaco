@@ -16,6 +16,16 @@ Issues and PRs are welcome 🎉🎉🎉
 
 Note: Please use [releases][github-release] instead of the `master` to build the final binary.
 
+Here is a brief summary of this project:
+
+- Along with the implementation of a production-ready C coroutine library, here is a detailed documentation about how to implement a *fastest* and *correct* coroutine library and also with a strict mathematical proof;
+- It has no more than 900 LOC but has the full function you may want from a coroutine library;
+- The [benchmark](#benchmark) part shows that one time of the context switching between coroutines only takes about *10 ns* (for the case of standalone stack) on the AWS c5d.large machine;
+- User could choose to create a new coroutine with a *standalone stack* or with a *share stack* (could be shared with others);
+- It is extremely memory efficient: *10,000,000* amount of co simultaneously to run only cost *2.8 GB* physical memory (run with tcmalloc, each co has a *120B* copy-stack size configuration).
+
+The phrase "*fastest*" in above means the fastest context switching implementation which complies to the Sys V ABI of Intel386 or AMD64.
+
 [github-release]: https://github.com/hnes/libaco/releases
 
 # Table of Content
@@ -722,6 +732,8 @@ Registers' usage in the calling convention of the Intel386 System V ABI:
                 change the control words of FPU or MXCSR on purpose \
                 like `fesetenv`)
 ```
+
+(For Intel386, the register usage is defined in the "P13, Table 2.3: Register Usage" of [Sys V ABI Intel386 V1.1](https://github.com/hjl-tools/x86-psABI/wiki/X86-psABI), and for AMD64 is in "P23, Figure 3.4: Register Usage" of [Sys V ABI AMD64 V1.0](https://github.com/hjl-tools/x86-psABI/wiki/X86-psABI).)
 
 **Proof:**
 
