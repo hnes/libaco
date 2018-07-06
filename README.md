@@ -8,12 +8,22 @@ Asymmetric COroutine & Arkenstone is the reason why it's been named `aco`.
 
 Support Sys V ABI of Intel386 and x86-64 currently.
 
-Issues and PRs are welcome 🎉🎉🎉
+Here is a brief summary of this project:
+
+- Along with the implementation of a production-ready C coroutine library, here is a detailed documentation about how to implement a *fastest* and *correct* coroutine library and also with a strict [mathematical proof](#proof-of-correctness);
+- It has no more than 900 LOC but has the full function you may want from a coroutine library;
+- The [benchmark](#benchmark) part shows that one time of the context switching between coroutines only takes about *10 ns* (for the case of standalone stack) on the AWS c5d.large machine;
+- User could choose to create a new coroutine with a *standalone stack* or with a *share stack* (could be shared with others);
+- It is extremely memory efficient: *10,000,000* amount of co simultaneously to run only cost *2.8 GB* physical memory (run with tcmalloc, each co has a *120B* copy-stack size configuration).
+
+The phrase "*fastest*" in above means the fastest context switching implementation which complies to the Sys V ABI of Intel386 or AMD64.
 
 [![Build Status Travis](https://img.shields.io/travis/hnes/libaco.svg?style=flat-square&&branch=master)](https://travis-ci.org/hnes/libaco)
 [![Releases](https://img.shields.io/github/release/hnes/libaco/all.svg?style=flat-square)](https://github.com/hnes/libaco/releases)
 [![LICENSE](https://img.shields.io/github/license/hnes/libaco.svg?style=flat-square)](https://github.com/hnes/libaco/blob/master/LICENSE)
 [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=libaco+-+A+blazing+fast+and+lightweight+pure+C+asymmetric+coroutine+library&url=https://github.com/hnes/libaco&via=00hnes)
+
+Issues and PRs are welcome 🎉🎉🎉
 
 Note: Please use [releases][github-release] instead of the `master` to build the final binary.
 
@@ -62,18 +72,6 @@ Note: Please use [releases][github-release] instead of the `master` to build the
 Production ready.
 
 # Synopsis
-
-Here is a brief summary of this project:
-
-- Along with the implementation of a production-ready C coroutine library, here is a detailed documentation about how to implement a *fastest* and *correct* coroutine library and also with a strict mathematical proof;
-- It has no more than 900 LOC but has the full function you may want from a coroutine library;
-- The [benchmark](#benchmark) part shows that one time of the context switching between coroutines only takes about *10 ns* (for the case of standalone stack) on the AWS c5d.large machine;
-- User could choose to create a new coroutine with a *standalone stack* or with a *share stack* (could be shared with others);
-- It is extremely memory efficient: *10,000,000* amount of co simultaneously to run only cost *2.8 GB* physical memory (run with tcmalloc, each co has a *120B* copy-stack size configuration).
-
-The phrase "*fastest*" in above means the fastest context switching implementation which complies to the Sys V ABI of Intel386 or AMD64.
-
-A "Hello libaco" code example:
 
 ```c
 #include "aco.h"    
