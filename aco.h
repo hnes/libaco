@@ -26,7 +26,7 @@
 
 #define ACO_VERSION_MAJOR 1
 #define ACO_VERSION_MINOR 2
-#define ACO_VERSION_PATCH 0
+#define ACO_VERSION_PATCH 2
 
 #ifdef ACO_USE_VALGRIND
     #include <valgrind/valgrind.h>
