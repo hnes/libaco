@@ -1,6 +1,6 @@
 # Name
 
-libaco - A blazing fast and lightweight pure C asymmetric coroutine library.
+libaco - A blazing fast and lightweight C asymmetric coroutine library.
 
 The code name of this project is Arkenstone 💎
 
@@ -21,7 +21,7 @@ The phrase "*fastest*" in above means the fastest context switching implementati
 [![Build Status Travis](https://img.shields.io/travis/hnes/libaco.svg?style=flat-square&&branch=master)](https://travis-ci.org/hnes/libaco)
 [![Releases](https://img.shields.io/github/release/hnes/libaco/all.svg?style=flat-square)](https://github.com/hnes/libaco/releases)
 [![LICENSE](https://img.shields.io/github/license/hnes/libaco.svg?style=flat-square)](https://github.com/hnes/libaco/blob/master/LICENSE)
-[![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=libaco+-+A+blazing+fast+and+lightweight+pure+C+asymmetric+coroutine+library&url=https://github.com/hnes/libaco&via=00hnes)
+[![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=libaco+-+A+blazing+fast+and+lightweight+C+asymmetric+coroutine+library&url=https://github.com/hnes/libaco&via=00hnes)
 
 Issues and PRs are welcome 🎉🎉🎉
 
