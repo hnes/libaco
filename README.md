@@ -904,16 +904,16 @@ New ideas are welcome!
 
 ```
 v1.2.1 Sat Jul 7 2018
-    Fix some noncompliant include guards in two C header files (
+    Fixed some noncompliant include guards in two C header files (
     issue #1 kindly reported by Markus Elfring @elfring);
-    Remove the "pure" word from "pure C" statement since it is
+    Removed the "pure" word from "pure C" statement since it is
     containing assembly codes (kindly reported by Peter Cawley
     @corsix);
     Many updates in the README.md document.
 v1.2.0 Tue Jul 3 2018
-    Provide another header named `aco_assert_override.h` so user
+    Provided another header named `aco_assert_override.h` so user
     could choose to override the default `assert` or not;
-    Add some macros about the version information.
+    Added some macros about the version information.
 v1.1   Mon Jul 2 2018
     Removed the requirement on the GCC version (>= 5.0).
 v1.0   Sun Jul 1 2018
