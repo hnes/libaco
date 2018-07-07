@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef _ACO_ASSERT_OVERRIDE_H
-#define _ACO_ASSERT_OVERRIDE_H
+#ifndef ACO_ASSERT_OVERRIDE_H
+#define ACO_ASSERT_OVERRIDE_H
 
 #include "aco.h"
 
