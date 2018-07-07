@@ -898,7 +898,7 @@ New ideas are welcome!
 
 * Support header files including by C++.
 
-* Add a macro `aco_new` which is the combination of something like `p = malloc(sz);    assertalloc_ptr(p)`.
+* Add a macro `aco_new` which is the combination of something like `p = malloc(sz); assertalloc_ptr(p)`.
 
 * Add a new API `aco_reset` to support the reusability of the coroutine objects.
 
