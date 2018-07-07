@@ -49,97 +49,97 @@ void aco_runtime_test(){
     )
 
 #define aco_amd64_inline_short_aligned_memcpy(dst, src, sz) do {\
-    __uint128_t __xmm0,__xmm1,__xmm2,__xmm3,__xmm4,__xmm5,__xmm6,__xmm7; \
+    __uint128_t xmm0,xmm1,xmm2,xmm3,xmm4,xmm5,xmm6,xmm7; \
     switch((sz) >> 4){ \
     case 0:  \
         break;  \
     case 1:  \
-        __xmm0 = *((__uint128_t*)(src) + 0);  \
-        *((__uint128_t*)(dst) + 0) = __xmm0; \
+        xmm0 = *((__uint128_t*)(src) + 0);  \
+        *((__uint128_t*)(dst) + 0) = xmm0; \
         break;  \
     case 2:  \
-        __xmm0 = *((__uint128_t*)(src) + 0);  \
-        __xmm1 = *((__uint128_t*)(src) + 1);  \
-        *((__uint128_t*)(dst) + 0) = __xmm0; \
-        *((__uint128_t*)(dst) + 1) = __xmm1; \
+        xmm0 = *((__uint128_t*)(src) + 0);  \
+        xmm1 = *((__uint128_t*)(src) + 1);  \
+        *((__uint128_t*)(dst) + 0) = xmm0; \
+        *((__uint128_t*)(dst) + 1) = xmm1; \
         break;  \
     case 3:  \
-        __xmm0 = *((__uint128_t*)(src) + 0);  \
-        __xmm1 = *((__uint128_t*)(src) + 1);  \
-        __xmm2 = *((__uint128_t*)(src) + 2);  \
-        *((__uint128_t*)(dst) + 0) = __xmm0; \
-        *((__uint128_t*)(dst) + 1) = __xmm1; \
-        *((__uint128_t*)(dst) + 2) = __xmm2; \
+        xmm0 = *((__uint128_t*)(src) + 0);  \
+        xmm1 = *((__uint128_t*)(src) + 1);  \
+        xmm2 = *((__uint128_t*)(src) + 2);  \
+        *((__uint128_t*)(dst) + 0) = xmm0; \
+        *((__uint128_t*)(dst) + 1) = xmm1; \
+        *((__uint128_t*)(dst) + 2) = xmm2; \
         break;  \
     case 4:  \
-        __xmm0 = *((__uint128_t*)(src) + 0);  \
-        __xmm1 = *((__uint128_t*)(src) + 1);  \
-        __xmm2 = *((__uint128_t*)(src) + 2);  \
-        __xmm3 = *((__uint128_t*)(src) + 3);  \
-        *((__uint128_t*)(dst) + 0) = __xmm0; \
-        *((__uint128_t*)(dst) + 1) = __xmm1; \
-        *((__uint128_t*)(dst) + 2) = __xmm2; \
-        *((__uint128_t*)(dst) + 3) = __xmm3; \
+        xmm0 = *((__uint128_t*)(src) + 0);  \
+        xmm1 = *((__uint128_t*)(src) + 1);  \
+        xmm2 = *((__uint128_t*)(src) + 2);  \
+        xmm3 = *((__uint128_t*)(src) + 3);  \
+        *((__uint128_t*)(dst) + 0) = xmm0; \
+        *((__uint128_t*)(dst) + 1) = xmm1; \
+        *((__uint128_t*)(dst) + 2) = xmm2; \
+        *((__uint128_t*)(dst) + 3) = xmm3; \
         break;  \
     case 5:  \
-        __xmm0 = *((__uint128_t*)(src) + 0);  \
-        __xmm1 = *((__uint128_t*)(src) + 1);  \
-        __xmm2 = *((__uint128_t*)(src) + 2);  \
-        __xmm3 = *((__uint128_t*)(src) + 3);  \
-        __xmm4 = *((__uint128_t*)(src) + 4);  \
-        *((__uint128_t*)(dst) + 0) = __xmm0; \
-        *((__uint128_t*)(dst) + 1) = __xmm1; \
-        *((__uint128_t*)(dst) + 2) = __xmm2; \
-        *((__uint128_t*)(dst) + 3) = __xmm3; \
-        *((__uint128_t*)(dst) + 4) = __xmm4; \
+        xmm0 = *((__uint128_t*)(src) + 0);  \
+        xmm1 = *((__uint128_t*)(src) + 1);  \
+        xmm2 = *((__uint128_t*)(src) + 2);  \
+        xmm3 = *((__uint128_t*)(src) + 3);  \
+        xmm4 = *((__uint128_t*)(src) + 4);  \
+        *((__uint128_t*)(dst) + 0) = xmm0; \
+        *((__uint128_t*)(dst) + 1) = xmm1; \
+        *((__uint128_t*)(dst) + 2) = xmm2; \
+        *((__uint128_t*)(dst) + 3) = xmm3; \
+        *((__uint128_t*)(dst) + 4) = xmm4; \
         break;  \
     case 6:  \
-        __xmm0 = *((__uint128_t*)(src) + 0);  \
-        __xmm1 = *((__uint128_t*)(src) + 1);  \
-        __xmm2 = *((__uint128_t*)(src) + 2);  \
-        __xmm3 = *((__uint128_t*)(src) + 3);  \
-        __xmm4 = *((__uint128_t*)(src) + 4);  \
-        __xmm5 = *((__uint128_t*)(src) + 5);  \
-        *((__uint128_t*)(dst) + 0) = __xmm0; \
-        *((__uint128_t*)(dst) + 1) = __xmm1; \
-        *((__uint128_t*)(dst) + 2) = __xmm2; \
-        *((__uint128_t*)(dst) + 3) = __xmm3; \
-        *((__uint128_t*)(dst) + 4) = __xmm4; \
-        *((__uint128_t*)(dst) + 5) = __xmm5; \
+        xmm0 = *((__uint128_t*)(src) + 0);  \
+        xmm1 = *((__uint128_t*)(src) + 1);  \
+        xmm2 = *((__uint128_t*)(src) + 2);  \
+        xmm3 = *((__uint128_t*)(src) + 3);  \
+        xmm4 = *((__uint128_t*)(src) + 4);  \
+        xmm5 = *((__uint128_t*)(src) + 5);  \
+        *((__uint128_t*)(dst) + 0) = xmm0; \
+        *((__uint128_t*)(dst) + 1) = xmm1; \
+        *((__uint128_t*)(dst) + 2) = xmm2; \
+        *((__uint128_t*)(dst) + 3) = xmm3; \
+        *((__uint128_t*)(dst) + 4) = xmm4; \
+        *((__uint128_t*)(dst) + 5) = xmm5; \
         break;  \
     case 7:  \
-        __xmm0 = *((__uint128_t*)(src) + 0);  \
-        __xmm1 = *((__uint128_t*)(src) + 1);  \
-        __xmm2 = *((__uint128_t*)(src) + 2);  \
-        __xmm3 = *((__uint128_t*)(src) + 3);  \
-        __xmm4 = *((__uint128_t*)(src) + 4);  \
-        __xmm5 = *((__uint128_t*)(src) + 5);  \
-        __xmm6 = *((__uint128_t*)(src) + 6);  \
-        *((__uint128_t*)(dst) + 0) = __xmm0; \
-        *((__uint128_t*)(dst) + 1) = __xmm1; \
-        *((__uint128_t*)(dst) + 2) = __xmm2; \
-        *((__uint128_t*)(dst) + 3) = __xmm3; \
-        *((__uint128_t*)(dst) + 4) = __xmm4; \
-        *((__uint128_t*)(dst) + 5) = __xmm5; \
-        *((__uint128_t*)(dst) + 6) = __xmm6; \
+        xmm0 = *((__uint128_t*)(src) + 0);  \
+        xmm1 = *((__uint128_t*)(src) + 1);  \
+        xmm2 = *((__uint128_t*)(src) + 2);  \
+        xmm3 = *((__uint128_t*)(src) + 3);  \
+        xmm4 = *((__uint128_t*)(src) + 4);  \
+        xmm5 = *((__uint128_t*)(src) + 5);  \
+        xmm6 = *((__uint128_t*)(src) + 6);  \
+        *((__uint128_t*)(dst) + 0) = xmm0; \
+        *((__uint128_t*)(dst) + 1) = xmm1; \
+        *((__uint128_t*)(dst) + 2) = xmm2; \
+        *((__uint128_t*)(dst) + 3) = xmm3; \
+        *((__uint128_t*)(dst) + 4) = xmm4; \
+        *((__uint128_t*)(dst) + 5) = xmm5; \
+        *((__uint128_t*)(dst) + 6) = xmm6; \
         break;  \
     case 8:  \
-        __xmm0 = *((__uint128_t*)(src) + 0);  \
-        __xmm1 = *((__uint128_t*)(src) + 1);  \
-        __xmm2 = *((__uint128_t*)(src) + 2);  \
-        __xmm3 = *((__uint128_t*)(src) + 3);  \
-        __xmm4 = *((__uint128_t*)(src) + 4);  \
-        __xmm5 = *((__uint128_t*)(src) + 5);  \
-        __xmm6 = *((__uint128_t*)(src) + 6);  \
-        __xmm7 = *((__uint128_t*)(src) + 7);  \
-        *((__uint128_t*)(dst) + 0) = __xmm0; \
-        *((__uint128_t*)(dst) + 1) = __xmm1; \
-        *((__uint128_t*)(dst) + 2) = __xmm2; \
-        *((__uint128_t*)(dst) + 3) = __xmm3; \
-        *((__uint128_t*)(dst) + 4) = __xmm4; \
-        *((__uint128_t*)(dst) + 5) = __xmm5; \
-        *((__uint128_t*)(dst) + 6) = __xmm6; \
-        *((__uint128_t*)(dst) + 7) = __xmm7; \
+        xmm0 = *((__uint128_t*)(src) + 0);  \
+        xmm1 = *((__uint128_t*)(src) + 1);  \
+        xmm2 = *((__uint128_t*)(src) + 2);  \
+        xmm3 = *((__uint128_t*)(src) + 3);  \
+        xmm4 = *((__uint128_t*)(src) + 4);  \
+        xmm5 = *((__uint128_t*)(src) + 5);  \
+        xmm6 = *((__uint128_t*)(src) + 6);  \
+        xmm7 = *((__uint128_t*)(src) + 7);  \
+        *((__uint128_t*)(dst) + 0) = xmm0; \
+        *((__uint128_t*)(dst) + 1) = xmm1; \
+        *((__uint128_t*)(dst) + 2) = xmm2; \
+        *((__uint128_t*)(dst) + 3) = xmm3; \
+        *((__uint128_t*)(dst) + 4) = xmm4; \
+        *((__uint128_t*)(dst) + 5) = xmm5; \
+        *((__uint128_t*)(dst) + 6) = xmm6; \
+        *((__uint128_t*)(dst) + 7) = xmm7; \
         break;  \
     }\
     *((uint64_t*)((uintptr_t)(dst) + (sz) - 8)) = *((uint64_t*)((uintptr_t)(src) + (sz) - 8)); \

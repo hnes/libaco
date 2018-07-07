@@ -56,8 +56,8 @@ typedef struct {
     size_t ct_restore;
 } aco_save_stack_t;
 
-struct aco_s__;
-typedef struct aco_s__ aco_t;
+struct aco_s;
+typedef struct aco_s aco_t;
 
 typedef struct {
     void*  ptr;            
@@ -79,7 +79,7 @@ typedef struct {
 
 typedef void (*aco_cofuncp_t)(void);
 
-struct aco_s__{
+struct aco_s{
     // cpu registers' state
 #ifdef __i386__
     #ifdef ACO_CONFIG_SHARE_FPU_MXCSR_ENV
