@@ -29,5 +29,33 @@ script:
     - date
     - mkdir output
     - bash make.sh
+    - ls output
+    - ls output | wc -l
     - cd output
     - bash ../test.sh
+    - cd ..
+    - rm -fr output
+    - mkdir output
+    - bash make.sh -o no-m32
+    - ls output
+    - ls output | wc -l
+    - cd output
+    - bash ../test.sh
+    - cd ..
+    - rm -fr output
+    - mkdir output
+    - bash make.sh -o no-valgrind
+    - ls output
+    - ls output | wc -l
+    - cd output
+    - bash ../test.sh
+    - cd ..
+    - rm -fr output
+    - mkdir output
+    - bash make.sh -o no-valgrind -o no-m32
+    - ls output
+    - ls output | wc -l
+    - cd output
+    - bash ../test.sh
+    - cd ..
+    - rm -fr output
