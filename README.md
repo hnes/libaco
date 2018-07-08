@@ -11,7 +11,7 @@ Support Sys V ABI of Intel386 and x86-64 currently.
 Here is a brief summary of this project:
 
 - Along with the implementation of a production-ready C coroutine library, here is a detailed documentation about how to implement a *fastest* and *correct* coroutine library and also with a strict [mathematical proof](#proof-of-correctness);
-- It has no more than 900 LOC but has the full function you may want from a coroutine library;
+- It has no more than 700 LOC but has the full function you may want from a coroutine library;
 - The [benchmark](#benchmark) part shows that one time of the context switching between coroutines only takes about *10 ns* (for the case of standalone stack) on the AWS c5d.large machine;
 - User could choose to create a new coroutine with a *standalone stack* or with a *share stack* (could be shared with others);
 - It is extremely memory efficient: *10,000,000* amount of co simultaneously to run only cost *2.8 GB* physical memory (run with tcmalloc, each co has a *120B* copy-stack size configuration).
