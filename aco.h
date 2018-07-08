@@ -24,13 +24,17 @@
 #include <time.h>
 #include <sys/mman.h>
 
-#define ACO_VERSION_MAJOR 1
-#define ACO_VERSION_MINOR 2
-#define ACO_VERSION_PATCH 2
-
 #ifdef ACO_USE_VALGRIND
     #include <valgrind/valgrind.h>
 #endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#define ACO_VERSION_MAJOR 1
+#define ACO_VERSION_MINOR 2
+#define ACO_VERSION_PATCH 2
 
 #ifdef __i386__
     #define ACO_REG_IDX_RETADDR 0
@@ -195,5 +199,9 @@ extern void aco_destroy(aco_t* co);
 #define aco_exit() do {       \
     aco_exit1(aco_gtls_co); \
 } while(0)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
