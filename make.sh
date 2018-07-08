@@ -20,7 +20,6 @@ CC="cc"
 
 app_list='''
 test_aco_tutorial_0
-test_aco_tutorial_0
 test_aco_tutorial_1
 test_aco_tutorial_2
 test_aco_tutorial_3 -lpthread
@@ -30,6 +29,9 @@ test_aco_tutorial_6
 test_aco_synopsis
 test_aco_benchmark
 '''
+
+gl_opt_no_m32=""
+gl_opt_no_valgrind=""
 
 OUTPUT_DIR="$OUTPUT_DIR""//file"
 OUTPUT_DIR=`dirname "$OUTPUT_DIR"`
@@ -63,6 +65,8 @@ function build_f(){
     declare file
     declare cflags
     declare build_cmd
+    declare tmp_ret
+    declare skip_flag
     echo "OUTPUT_DIR:    $OUTPUT_DIR"
     echo "CFLAGS:        $CFLAGS"
     echo "EXTRA_CFLAGS:  $EXTRA_CFLAGS"
@@ -77,12 +81,97 @@ function build_f(){
         fi
         #echo "<$file>:<$cflags>:$OUTPUT_DIR:$CFLAGS:$EXTRA_CFLAGS:$OUTPUT_SUFFIX"
         build_cmd="$CC $CFLAGS $EXTRA_CFLAGS acosw.S aco.c $file.c $cflags -o $OUTPUT_DIR/$file$OUTPUT_SUFFIX"
-        echo "    $build_cmd"
-        $build_cmd
-        assert "build fail"
+        skip_flag=""
+        if [ "$gl_opt_no_m32" ]
+        then
+            echo "$OUTPUT_SUFFIX" | grep -P "\bm32\b" &>/dev/null
+            tmp_ret=$?
+            if [ "$tmp_ret" -eq "0" ]
+            then
+                skip_flag="true"
+            elif [ "$tmp_ret" -eq "1" ]
+            then
+                :
+            else
+                error "grep failed: $tmp_ret"
+                exit $tmp_ret
+            fi
+        fi
+        if [ "$gl_opt_no_valgrind" ]
+        then
+            echo "$OUTPUT_SUFFIX" | grep -P "\bvalgrind\b" &>/dev/null
+            tmp_ret=$?
+            if [ "$tmp_ret" -eq "0" ]
+            then
+                skip_flag="true"
+            elif [ "$tmp_ret" -eq "1" ]
+            then
+                :
+            else
+                error "grep failed: $tmp_ret"
+                exit $tmp_ret
+            fi
+        fi
+        if [ "$skip_flag" ]
+        then
+            echo "skip    $build_cmd"
+        else
+            echo "        $build_cmd"
+            $build_cmd
+            assert "build fail"
+        fi
     done
     assert "exit"
 }
+
+function usage() {
+    echo "Usage: $0 [-o <no-m32|no-valgrind>] [-h]" 1>&2
+    echo '''
+Example:
+    # default build
+    bash make.sh
+    # build without the i386 binary output
+    bash make.sh -o no-m32
+    # build without the valgrind supported binary output
+    bash make.sh -o no-valgrind
+    # build without the valgrind supported and i386 binary output
+    bash make.sh -o no-valgrind -o no-m32
+''' 1>&2
+}
+
+gl_opt_value=""
+while getopts ":o:h" o; do
+    case "${o}" in
+        o)
+            gl_opt_value=${OPTARG}
+            if [ "$gl_opt_value" = "no-m32" ]
+            then
+                gl_opt_no_m32="true"
+            elif [ "$gl_opt_value" = "no-valgrind" ]
+            then
+                gl_opt_no_valgrind="true"
+            else
+                usage
+                error unknow option value of '-o'
+                exit 1
+            fi
+            ;;
+        h)
+            usage
+            exit 0
+            ;;
+        *)
+            usage
+            error unknow option
+            exit 1
+            ;;
+    esac
+done
+shift $((OPTIND-1))
+
+#echo "o = $gl_opt_value"
+#echo "gl_opt_no_valgrind:$gl_opt_no_valgrind"
+#echo "gl_opt_no_m32:$gl_opt_no_m32"
 
 tra "echo;echo build has been interrupted"
 
