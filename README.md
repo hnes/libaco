@@ -211,6 +211,25 @@ $ mkdir output
 $ bash make.sh
 ```
 
+There is also some detailed options in make.sh:
+
+```bash
+$bash make.sh -h
+Usage: make.sh [-o <no-m32|no-valgrind>] [-h]
+
+Example:
+    # default build
+    bash make.sh
+    # build without the i386 binary output
+    bash make.sh -o no-m32
+    # build without the valgrind supported binary output
+    bash make.sh -o no-valgrind
+    # build without the valgrind supported and i386 binary output
+    bash make.sh -o no-valgrind -o no-m32
+```
+
+In short, using `-o no-valgrind ` if you have no valgrind headers installed, `-o no-m32` if you have no 32-bit gcc development tools installed on a AMD64 host.
+
 ## Test
 
 ```bash
@@ -379,7 +398,7 @@ Destroy the `co`. The argument `co` must not be NULL. The private save stack wou
 ```c
 #define ACO_VERSION_MAJOR 1
 #define ACO_VERSION_MINOR 2
-#define ACO_VERSION_PATCH 0
+#define ACO_VERSION_PATCH 2
 ```
 
 This 3 macros are defined in the header `aco.h` and the value of them follows the spec: [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html).
@@ -896,8 +915,6 @@ void co_fp1() {
 
 New ideas are welcome!
 
-* Support header files including by C++.
-
 * Add a macro `aco_new` which is the combination of something like `p = malloc(sz); assertalloc_ptr(p)`.
 
 * Add a new API `aco_reset` to support the reusability of the coroutine objects.
@@ -907,6 +924,15 @@ New ideas are welcome!
 # CHANGES
 
 ```
+v1.2.2 Mon Jul 9 2018
+    Added a new option `-o <no-m32|no-valgrind>` to make.sh;
+    Correction about the value of macro ACO_VERSION_PATCH (issue #1 
+    kindly reported by Markus Elfring @elfring);
+    Adjusted some noncompliant naming of identifiers (double underscore
+    `__`) (issue #1, kindly proposed by Markus Elfring @elfring);
+    Supported the header file including by C++ (issue #4, kindly
+    proposed by Markus Elfring @elfring).
+
 v1.2.1 Sat Jul 7 2018
     Fixed some noncompliant include guards in two C header files (
     issue #1 kindly reported by Markus Elfring @elfring);
