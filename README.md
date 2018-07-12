@@ -857,8 +857,8 @@ In detail, there are 5 tips:
 yield  f3     f5
 ```
 
-1. The stack usage of main co when it is been yielded (i.e. call `aco_resume` to resume other non-main co) has no direct influence to the performance of context switching between coroutines (since it has a standalone execution stack);
-2. The stack usage of standalone non-main co when it is been yielded (i.e. call `aco_yield` to yield back to main co) has no direct influence to the performance of context switching between coroutines. But a huge amount of standalone non-main co would cost too much of virtual memory (due to the standalone stack), so it is not recommended to create huge amount of standalone non-main co in one thread;
+1. The stack usage of main co has no direct influence to the performance of context switching between coroutines (since it has a standalone execution stack);
+2. The stack usage of standalone non-main co has no direct influence to the performance of context switching between coroutines. But a huge amount of standalone non-main co would cost too much of virtual memory (due to the standalone stack), so it is not recommended to create huge amount of standalone non-main co in one thread;
 3. The stack usage of non-standalone (share stack with other coroutines) non-main co when it is been yielded (i.e. call `aco_yield` to yield back to main co) has big impact to the performance of context switching between coroutines. The benchmark result shows that clearly already. In the diagram above, the stack usage of function f2, f3, f4 and f5 has no direct influence to context switching performance since there are no `aco_yield` when they are executing. Whereas the stack usage of co_fp and f1 dominates the value of `co->save_stack.max_cpsz` and has a big influence to the context switching performance.
 
 The key to keep a tiny stack usage of a function is to allocate the local variables (especially the big ones) on the heap and manage their lifecycle manually instead of allocating them on the stack by default. The `-fstack-usage` option of gcc is very helpful about this.
@@ -874,7 +874,7 @@ void co_fp0() {
     aco_yield();
     check(ct);
     int* ptr = &ct;
-    inc_p(ptr);
+    inc_p(ptr);   // line 11
     aco_exit();
 }
 
