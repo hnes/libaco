@@ -27,6 +27,10 @@ script:
     - ls /usr/include
     - ls /usr/include/valgrind
     - date
+    - make
+    - ls -hl
+    - ./test_aco_synopsis
+    - make clean
     - mkdir output
     - bash make.sh
     - ls output

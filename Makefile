@@ -1,9 +1,8 @@
-TARGET = test_aco_synopsis
 CC = gcc
 CFLAGS = -g -O2 -Wall -Werror
 
 test_aco_synopsis : acosw.o aco.o test_aco_synopsis.o
-	cc -o test_aco_synopsis acosw.o aco.o test_aco_synopsis.o
+	$(CC) -o test_aco_synopsis acosw.o aco.o test_aco_synopsis.o
 
 acosw.o : acosw.S
 	$(CC) $(CFLAGS) -c acosw.S -o acosw.o
