@@ -1,3 +1,6 @@
+# This Makefile is just a temporary demonstration and will be
+# substituted when our formal build system generator arrives.
+
 CC = gcc
 CFLAGS = -g -O2 -Wall -Werror
 
