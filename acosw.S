@@ -145,13 +145,23 @@ aco_save_fpucw_mxcsr:
 aco_funcp_protector_asm:
 #ifdef __i386__
     and     esp,0xfffffff0
+#if defined(__pic__) || defined(__PIC__)
+    call    aco_funcp_protector@PLT
+    call    abort@PLT
+#else
     call    aco_funcp_protector
     call    abort
+#endif
     ret
 #elif __x86_64__
     and     rsp,0xfffffffffffffff0
+#if defined(__pic__) || defined(__PIC__)
+    call    aco_funcp_protector@PLT
+    call    abort@PLT
+#else
     call    aco_funcp_protector
     call    abort
+#endif
     ret
 #else
     #error "platform not support"
