@@ -239,7 +239,7 @@ $ bash ../test.sh
 
 # Tutorials
 
-The `test_aco_tutorial_0.c` in this repository shows the basic usgae of libaco. There is only one main co and one standalone non-main co in this tutorial. The comments in the source code is also very helpful.
+The `test_aco_tutorial_0.c` in this repository shows the basic usage of libaco. There is only one main co and one standalone non-main co in this tutorial. The comments in the source code is also very helpful.
 
 The `test_aco_tutorial_1.c` shows the usage of some statistics of non-main co. The data structure of `aco_t` is very clear and is defined in `aco.h`.
 
