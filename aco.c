@@ -19,7 +19,7 @@
 // this header including should be at the last of the `include` directives list
 #include "aco_assert_override.h"
 
-void aco_runtime_test(){
+void aco_runtime_test(void){
 #ifdef __i386__
     _Static_assert(sizeof(void*) == 4, "require 'sizeof(void*) == 4'");
 #elif  __x86_64__    
@@ -154,7 +154,7 @@ void aco_runtime_test(){
     } \
 } while(0)
 
-static void aco_default_protector_last_word(){
+static void aco_default_protector_last_word(void){
     aco_t* co = aco_get_co();
     // do some log about the offending `co`
     fprintf(stderr,"error: aco_default_protector_last_word triggered\n");
@@ -186,7 +186,7 @@ void aco_thread_init(aco_cofuncp_t last_word_co_fp){
 // called. If it's been called, that means the offending 
 // `co` didn't call aco_exit(co) instead of `return` to
 // finish its execution.
-void aco_funcp_protector(){
+void aco_funcp_protector(void){
     if((void*)(aco_gtls_last_word_fp) != NULL){
         aco_gtls_last_word_fp();
     }else{

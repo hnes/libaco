@@ -134,7 +134,7 @@ struct aco_s{
     }   \
 } while(0)
 
-extern void aco_runtime_test();
+extern void aco_runtime_test(void);
 
 extern void aco_thread_init(aco_cofuncp_t last_word_co_fp);
 
@@ -144,9 +144,9 @@ extern void* acosw(aco_t* from_co, aco_t* to_co); // asm
 
 extern void aco_save_fpucw_mxcsr(void* p);  // asm
 
-extern void aco_funcp_protector_asm(); // asm
+extern void aco_funcp_protector_asm(void); // asm
 
-extern void aco_funcp_protector();
+extern void aco_funcp_protector(void);
 
 extern aco_share_stack_t* aco_share_stack_new(size_t sz);
 
