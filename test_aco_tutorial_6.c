@@ -54,7 +54,7 @@ int main() {
     while(ct < co_amount){
 #ifdef ACO_USE_VALGRIND
         aco_share_stack_t* private_sstk = aco_share_stack_new2(
-            0, co_amount % 2
+            0, ct % 2
         );
         coarray[ct] = aco_create(
             main_co, private_sstk, 0, co_fp0,
