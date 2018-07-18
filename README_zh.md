@@ -10,8 +10,8 @@ Asymmetric COroutine 和 Arkenstone 是 aco 的名称来源。
 
 下面是这个项目的简要介绍：
 
-- 除了一个生产级别的C协程库实现，还包含了一个详细的文档描述了如何实现一个 *最快* 且 *正确* 的协程库以及其严格的数学证明；
-- 核心实现不超过 *700* 行代码，包含了一个协程库应该有的全部功能；
+- 除了一个生产级别的C协程库实现，还包含了一个详细的文档描述了如何实现一个 *最快且正确* 的协程库以及其严格的数学证明；
+- 核心实现不超过 *700* 行代码，但包含了一个协程库应该有的全部功能；
 - 在AWS c5d.large机器上的性能测试结果指出，一次协程间上下文切换仅耗时 *10 ns* （独立执行栈）；
 - 用户在创建新的协程时，可以选择其拥有一个独占的执行栈，或者是与其它任意数量的协程一起共享一个执行栈；
 - 拥有极致的内存使用效率：一千万个协程并发执行仅消耗2.8GB的物理内存（tcmalloc，每一个协程使用120B的复制栈）。
@@ -69,7 +69,7 @@ Asymmetric COroutine 和 Arkenstone 是 aco 的名称来源。
 
 # Status
 
-可以用于生产环境.
+可以用于生产环境。
 
 # Synopsis
 
@@ -184,9 +184,9 @@ $ valgrind --leak-check=full --tool=memcheck ./test_aco_synopsis
 
 最终，我们得到了libaco的全局鸟瞰图。
 
-如果你想要实现自己的协程库或者更加深入的了解libaco的实现，"[Proof of Correctness](#proof-of-correctness)"部分将会非常有用。
+如果你想要实现自己的协程库或者更加深入的了解libaco的实现，"[Proof of Correctness](#proof-of-correctness)" 部分将会非常有用。
 
-接下来，可以阅读[教程](#tutorials)或者性能测试部分。[性能测试的结果报告](#benchmark)令人印象深刻同时发人深省。
+接下来，可以阅读[教程](#tutorials)或者性能测试部分。[性能测试的报告](#benchmark)令人印象深刻同时发人深省。
 
 # Build and Test
 
@@ -257,7 +257,7 @@ $ bash ../test.sh
 
 在阅读下面的API文档时，建议也可以同时阅读对应源码中的实现，因为源码非常的清晰易读。同时，在阅读API文档之前，推荐先阅读[教程](#tutorials)部分。
 
-另外，在开始写libaco的应用之前，强烈建议先进行阅读[最佳实践](#best-practice)章节，这一章节中除了描述如何应用libaco以让其性能发挥到极致，也描述了一些libaco编程时的注意事项。
+另外，在开始写libaco的应用之前，强烈建议先进行阅读[最佳实践](#best-practice)章节，此章节中除了描述如何应用libaco以让其性能发挥到极致，也描述了一些libaco编程时的注意事项。
 
 注意：libaco的版本控制遵从[Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html)标准。所以，下面列出的所有API均有标准中所描述的兼容性保证（请注意，没有在下面API列表中的函数调用则没有如此的保证）。
 
@@ -293,7 +293,7 @@ aco_share_stack_t* aco_share_stack_new2(size_t sz, char guard_page_enabled);
 
 创建一个新的执行栈，入参`sz`是对要创建执行栈的大小的一个建议性字节值，入参`guard_page_enabled`决定了要创建的执行栈是否会拥有一个只读的 "guard page" （可以用来检测执行栈的溢出）。
 
-当第一入参`sz`为0时，表示选择使用默认的大小值（2MB）。经过一系列关于内存对齐和保留的运算后,该API保证最终创建出的执行栈满足下列所有条件：
+当第一入参`sz`为0时，表示选择使用默认的大小值（2MB）。经过一系列关于内存对齐和保留的运算后，该API保证最终创建出的执行栈满足下列所有条件：
 
 * `final_valid_sz >= 4096`
 * `final_valid_sz >= sz`
@@ -671,7 +671,7 @@ aco_destroy                                             100000     0.038 s      
 
 # Proof of Correctness
 
-首先，在开始实现或者证明一个协程库之前，一个必备的条件是要对[Sys V ABI of intel386 and x86-64](https://github.com/hjl-tools/x86-psABI/wiki/X86-psABI)标准非常的熟悉，以及一些基础的汇编知识。
+首先，在开始实现或者证明一个协程库之前，必备的条件是要对[Sys V ABI of intel386 and x86-64](https://github.com/hjl-tools/x86-psABI/wiki/X86-psABI)标准非常的熟悉，以及一些基础的汇编知识。
 
 接下来的证明中并没有包含关于IP（指令指针），SP（堆栈指针）和协程的私有保存栈与共享执行栈之间的保存与恢复的直接描述，因为相比于ABI约束的保证，这些东西是相当微不足道且容易实现和理解的。
 
@@ -813,7 +813,7 @@ status bits of EFLAGS,FPU,MXCSR
 
 从`acosw`调用者的角度来看，由于在`acosw`被调用（或返回）时，所有的callee saved registers都做了对应的保存（或恢复）工作，则约束C2.0与2.1被`acosw`满足。由于我们已假定FPU与MXCSR的控制字在程序运行过程中不会被更改，所以约束C2.2也已经被`acosw`满足。
 
-3. mathematical induction:
+3. Mathematical induction:
 
 显然，在当前OS线程中，第一次`acosw`必然属于第一类状态迁移：yielded state co -> init state co，并且接下来的所有`acosw`必然属于这两类状态迁移的其中一类。顺序地用上面得到两个结论依次证明，最终得到“所有的协程在调用`acosw`前后都一直满足Sys V ABI规范的约束”结论。如此，证明结束。
 
@@ -957,7 +957,7 @@ v1.0   Sun Jul 1 2018
 
 # Donation
 
-我是一位全职开源项目开发者，任何数量的捐赠对我都将会是莫大的鼓励 ;-)
+我是一位自由的全职开源项目开发者，任何数量的捐赠对我都将会是莫大的鼓励 ;-)
 
 * Paypal
 
