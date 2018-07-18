@@ -21,7 +21,7 @@ The phrase "*fastest*" in above means the fastest context switching implementati
 [![Build Status Travis](https://img.shields.io/travis/hnes/libaco.svg?style=flat-square&&branch=master)](https://travis-ci.org/hnes/libaco)
 [![Releases](https://img.shields.io/github/release/hnes/libaco/all.svg?style=flat-square)](https://github.com/hnes/libaco/releases)
 [![LICENSE](https://img.shields.io/github/license/hnes/libaco.svg?style=flat-square)](https://github.com/hnes/libaco/blob/master/LICENSE)
-[![中文文档](https://img.shields.io/badge/doc-中文文档-blue.svg?style=flat-square)](https://github.com/hnes/libaco/blob/master/README_zh.md)
+[![中文文档](https://img.shields.io/badge/doc-en%20+%20中文-blue.svg?style=flat-square)](https://github.com/hnes/libaco/blob/master/README_zh.md)
 [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=libaco+-+A+blazing+fast+and+lightweight+C+asymmetric+coroutine+library&url=https://github.com/hnes/libaco&via=00hnes)
 
 Issues and PRs are welcome 🎉🎉🎉
