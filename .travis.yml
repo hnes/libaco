@@ -4,7 +4,7 @@ dist: trusty
 
 notifications:
   email:
-  - 00hnes@gmail.com
+    - 00hnes@gmail.com
 
 install:
   - mkdir -p build/m32 && cd build/m32
@@ -45,33 +45,33 @@ matrix:
       addons:
         apt:
           sources:
-          - ubuntu-toolchain-r-test
+            - ubuntu-toolchain-r-test
           packages:
-          - gcc-4.9
+            - gcc-4.9
     - os: linux
       compiler: gcc-5
       addons:
         apt:
           sources:
-          - ubuntu-toolchain-r-test
+            - ubuntu-toolchain-r-test
           packages:
-          - gcc-5
+            - gcc-5
     - os: linux
       compiler: gcc-6
       addons:
         apt:
           sources:
-          - ubuntu-toolchain-r-test
+            - ubuntu-toolchain-r-test
           packages:
-          - gcc-6
+            - gcc-6
     - os: linux
       compiler: gcc-7
       addons:
         apt:
           sources:
-          - ubuntu-toolchain-r-test
+            - ubuntu-toolchain-r-test
           packages:
-          - gcc-7
+            - gcc-7
 
     # clang
     - os: linux
@@ -79,43 +79,43 @@ matrix:
       addons:
         apt:
           sources:
-          - ubuntu-toolchain-r-test
-          - llvm-toolchain-trusty-3.5
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-trusty-3.5
           packages:
-          - clang-3.5
+            - clang-3.5
     - os: linux
       compiler: clang-3.6
       addons:
         apt:
           sources:
-          - ubuntu-toolchain-r-test
-          - llvm-toolchain-trusty-3.6
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-trusty-3.6
           packages:
-          - clang-3.6
+            - clang-3.6
     - os: linux
       compiler: clang-3.8
       addons:
         apt:
           sources:
-          - ubuntu-toolchain-r-test
-          - llvm-toolchain-trusty-3.8
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-trusty-3.8
           packages:
-          - clang-3.8
+            - clang-3.8
     - os: linux
       compiler: clang-3.9
       addons:
         apt:
           sources:
-          - ubuntu-toolchain-r-test
-          - llvm-toolchain-trusty-3.9
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-trusty-3.9
           packages:
-          - clang-3.9
+           - clang-3.9
     - os: linux
       compiler: clang-4.0
       addons:
         apt:
           sources:
-          - ubuntu-toolchain-r-test
-          - llvm-toolchain-trusty-4.0
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-trusty-4.0
           packages:
-    - clang-4.0
+            - clang-4.0
