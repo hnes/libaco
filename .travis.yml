@@ -7,36 +7,41 @@ notifications:
     - 00hnes@gmail.com
 
 install:
-  - mkdir -p build/m32 && cd build/m32
-  - cmake -DACO_M32=ON ../..
+  - mkdir -p build/default && cd build/default
+  - cmake ../..
   - cmake --build .
   - cd ../..
-  - mkdir -p build/fpenv && cd build/fpenv
-  - cmake -DACO_SHARE_FPENV=ON ../..
-  - cmake --build .
-  - cd ../..
-  - mkdir -p build/m32-fpenv && cd build/m32-fpenv
-  - cmake -DACO_M32=ON -DACO_SHARE_FPENV=ON ../..
-  - cmake --build .
-  - cd ../..
+#  - mkdir -p build/m32 && cd build/m32
+#  - cmake -DACO_M32=ON ../..
+#  - cmake --build .
+#  - cd ../..
+#  - mkdir -p build/fpenv && cd build/fpenv
+#  - cmake -DACO_SHARE_FPENV=ON ../..
+#  - cmake --build .
+#  - cd ../..
+#  - mkdir -p build/m32-fpenv && cd build/m32-fpenv
+#  - cmake -DACO_M32=ON -DACO_SHARE_FPENV=ON ../..
+#  - cmake --build .
+#  - cd ../..
 
 script:
-  - cmake --build build/m32 --target check
-  - cmake --build build/fpenv --target check
-  - cmake --build build/m32-fpenv --target check
+  - cmake --build build/default --target check
+#  - cmake --build build/m32 --target check
+#  - cmake --build build/fpenv --target check
+#  - cmake --build build/m32-fpenv --target check
 
 matrix:
   include:
     # default
     - os: linux
-    - os: osx
-
-    - os: osx
-      osx_image: xcode7.3
-      compiler: clang
-    - os: osx
-      osx_image: xcode8.3
-      compiler: clang
+#    - os: osx
+#
+#    - os: osx
+#      osx_image: xcode7.3
+#      compiler: clang
+#    - os: osx
+#      osx_image: xcode8.3
+#      compiler: clang
 
     # gcc
     - os: linux
