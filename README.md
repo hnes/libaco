@@ -703,49 +703,49 @@ Here is a summary of the registers' constraints in the Function Calling Conventi
 Registers' usage in the calling convention of the Intel386 System V ABI:
     caller saved (scratch) registers:
         C1.0: EAX
-            At the entry of a function all:
+            At the entry of a function call:
                 could be any value
             After the return of `acosw`:
                 hold the return value for `acosw`
         C1.1: ECX,EDX
-            At the entry of a function all:
+            At the entry of a function call:
                 could be any value
             After the return of `acosw`:
                 could be any value
         C1.2: Arithmetic flags, x87 and mxcsr flags
-            At the entry of a function all:
+            At the entry of a function call:
                 could be any value
             After the return of `acosw`:
                 could be any value
         C1.3: ST(0-7)
-            At the entry of a function all:
+            At the entry of a function call:
                 the stack of FPU must be empty
             After the return of `acosw`:
                 the stack of FPU must be empty
         C1.4: Direction flag
-            At the entry of a function all:
+            At the entry of a function call:
                 DF must be 0
             After the return of `acosw`:
                 DF must be 0
         C1.5: others: xmm*,ymm*,mm*,k*...
-            At the entry of a function all:
+            At the entry of a function call:
                 could be any value
             After the return of `acosw`:
                 could be any value
     callee saved registers:
         C2.0: EBX,ESI,EDI,EBP
-            At the entry of a function all:
+            At the entry of a function call:
                 could be any value
             After the return of `acosw`:
                 must be the same as it is at the entry of `acosw` 
         C2.1: ESP
-            At the entry of a function all:
+            At the entry of a function call:
                 must be a valid stack pointer
                 (alignment of 16 bytes, retaddr and etc...)
             After the return of `acosw`:
                 must be the same as it is before the call of `acosw`
         C2.2: control word of FPU & mxcsr
-            At the entry of a function all:
+            At the entry of a function call:
                 could be any configuration
             After the return of `acosw`:
                 must be the same as it is before the call of `acosw` 
