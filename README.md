@@ -933,7 +933,6 @@ v1.2.2 Mon Jul 9 2018
     `__`) (issue #1, kindly proposed by Markus Elfring @elfring);
     Supported the header file including by C++ (issue #4, kindly
     proposed by Markus Elfring @elfring).
-
 v1.2.1 Sat Jul 7 2018
     Fixed some noncompliant include guards in two C header files (
     issue #1 kindly reported by Markus Elfring @elfring);
