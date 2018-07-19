@@ -1,61 +1,121 @@
+sudo: false
+language: c
 dist: trusty
-sudo: required
 
 notifications:
   email:
-    - 00hnes@gmail.com
-
-language: c
-
-compiler:
-  - gcc
-  - clang
+  - 00hnes@gmail.com
 
 install:
-    - sudo apt-get install -qq -y libreadline-dev libncurses5-dev libpcre3-dev libssl-dev perl make build-essential valgrind gcc-multilib g++-multilib libc6-dbg libc6-dbg:i386
-    - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-    - sudo apt-get update
-    - sudo apt-key update
-    
+  - mkdir -p build/m32 && cd build/m32
+  - cmake -DACO_M32=ON ../..
+  - cmake --build .
+  - cd ../..
+  - mkdir -p build/fpenv && cd build/fpenv
+  - cmake -DACO_SHARE_FPENV=ON ../..
+  - cmake --build .
+  - cd ../..
+  - mkdir -p build/m32-fpenv && cd build/m32-fpenv
+  - cmake -DACO_M32=ON -DACO_SHARE_FPENV=ON ../..
+  - cmake --build .
+  - cd ../..
+
 script:
-    - echo $TRAVIS_EVENT_TYPE
-    - ulimit -c unlimited
-    - cat /proc/cpuinfo && free -m && uname -a
-    - cc --version
-    - gcc --version
-    - echo $CC
-    - ls /usr/include
-    - ls /usr/include/valgrind
-    - date
-    - mkdir output
-    - bash make.sh
-    - ls output
-    - ls output | wc -l
-    - cd output
-    - bash ../test.sh
-    - cd ..
-    - rm -fr output
-    - mkdir output
-    - bash make.sh -o no-m32
-    - ls output
-    - ls output | wc -l
-    - cd output
-    - bash ../test.sh
-    - cd ..
-    - rm -fr output
-    - mkdir output
-    - bash make.sh -o no-valgrind
-    - ls output
-    - ls output | wc -l
-    - cd output
-    - bash ../test.sh
-    - cd ..
-    - rm -fr output
-    - mkdir output
-    - bash make.sh -o no-valgrind -o no-m32
-    - ls output
-    - ls output | wc -l
-    - cd output
-    - bash ../test.sh
-    - cd ..
-    - rm -fr output
+  - cmake --build build/m32 --target check
+  - cmake --build build/fpenv --target check
+  - cmake --build build/m32-fpenv --target check
+
+matrix:
+  include:
+    # default
+    - os: linux
+    - os: osx
+
+     osx
+    - os: osx
+      osx_image: xcode7.3
+      compiler: clang
+    - os: osx
+      osx_image: xcode8.3
+      compiler: clang
+
+    # gcc
+    - os: linux
+      compiler: gcc-4.9
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - gcc-4.9
+    - os: linux
+      compiler: gcc-5
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - gcc-5
+    - os: linux
+      compiler: gcc-6
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - gcc-6
+    - os: linux
+      compiler: gcc-7
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - gcc-7
+
+    # clang
+    - os: linux
+      compiler: clang-3.5
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          - llvm-toolchain-trusty-3.5
+          packages:
+          - clang-3.5
+    - os: linux
+      compiler: clang-3.6
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          - llvm-toolchain-trusty-3.6
+          packages:
+          - clang-3.6
+    - os: linux
+      compiler: clang-3.8
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          - llvm-toolchain-trusty-3.8
+          packages:
+          - clang-3.8
+    - os: linux
+      compiler: clang-3.9
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          - llvm-toolchain-trusty-3.9
+          packages:
+          - clang-3.9
+    - os: linux
+      compiler: clang-4.0
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          - llvm-toolchain-trusty-4.0
+          packages:
+    - clang-4.0

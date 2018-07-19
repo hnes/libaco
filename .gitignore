@@ -1,0 +1,5 @@
+### CMake
+cmake-build-*/
+
+### Makefile
+build/
