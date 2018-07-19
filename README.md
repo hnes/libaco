@@ -6,13 +6,13 @@ The code name of this project is Arkenstone 💎
 
 Asymmetric COroutine & Arkenstone is the reason why it's been named `aco`.
 
-Support Sys V ABI of Intel386 and x86-64 currently.
+Currently supports Sys V ABI of Intel386 and x86-64.
 
 Here is a brief summary of this project:
 
 - Along with the implementation of a production-ready C coroutine library, here is a detailed documentation about how to implement a *fastest* and *correct* coroutine library and also with a strict [mathematical proof](#proof-of-correctness);
-- It has no more than 700 LOC but has the full function you may want from a coroutine library;
-- The [benchmark](#benchmark) part shows that one time of the context switching between coroutines only takes about *10 ns* (for the case of standalone stack) on the AWS c5d.large machine;
+- It has no more than 700 LOC but it is still a full-featured coroutine library.
+- The [benchmark](#benchmark) part shows that context switching between coroutines only takes about *10 ns* (for the case of standalone stack) on the AWS c5d.large machine;
 - User could choose to create a new coroutine with a *standalone stack* or with a *share stack* (could be shared with others);
 - It is extremely memory efficient: *10,000,000* amount of co simultaneously to run only cost *2.8 GB* physical memory (run with tcmalloc, each co has a *120B* copy-stack size configuration).
 
@@ -30,7 +30,7 @@ Note: Please use [releases][github-release] instead of the `master` to build the
 
 [github-release]: https://github.com/hnes/libaco/releases
 
-# Table of Content
+# Table of Contents
 
    * [Name](#name)
    * [Table of Content](#table-of-content)
@@ -161,13 +161,13 @@ $ gcc -g -D ACO_USE_VALGRIND -O2 acosw.S aco.c test_aco_synopsis.c -o test_aco_s
 $ valgrind --leak-check=full --tool=memcheck ./test_aco_synopsis
 ```
 
-For more information you may refer the "[Build and Test](#build-and-test)" part.
+For more information you may refer to the "[Build and Test](#build-and-test)" part.
 
 # Description
 
 ![thread_model_0](img/thread_model_0.png)
 
-There is 4 basic elements for a ordinary execution state: `{cpu_registers, code, heap, stack}`. 
+There is 4 basic elements of ordinary execution state: `{cpu_registers, code, heap, stack}`. 
 
 Since the code information is indicated by `({E|R})?IP` register, and the address of the memory allocated from heap is normally stored in the stack directly or indirectly, thus we could simplify the 4 elements into only 2 of them: `{cpu_registers, stack}`.
 
@@ -267,7 +267,7 @@ typedef void (*aco_cofuncp_t)(void);
 void aco_thread_init(aco_cofuncp_t last_word_co_fp);
 ```
 
-To initialize the libaco environment in the current thread.
+Initializes the libaco environment in the current thread.
 
 It will store the current control words of FPU and MXCSR into a thread-local global variable. 
 
@@ -290,7 +290,7 @@ Equal to `aco_share_stack_new2(sz, 1)`.
 aco_share_stack_t* aco_share_stack_new2(size_t sz, char guard_page_enabled);
 ```
 
-Create a new share stack with a advisory memory size of `sz` in bytes and may have a guard page (read-only) for the detection of stack overflow which is depending on the 2nd argument `guard_page_enabled`.
+Creates a new share stack with a advisory memory size of `sz` in bytes and may have a guard page (read-only) for the detection of stack overflow which is depending on the 2nd argument `guard_page_enabled`.
 
 To use the default size value (2MB) if the 1st argument `sz` equals 0. After some computation of alignment and reserve, this function will ensure the final valid length of the share stack in return:
 
@@ -402,7 +402,7 @@ Destroy the `co`. The argument `co` must not be NULL. The private save stack wou
 #define ACO_VERSION_PATCH 2
 ```
 
-This 3 macros are defined in the header `aco.h` and the value of them follows the spec: [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html).
+These 3 macros are defined in the header `aco.h` and the value of them follows the spec: [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html).
 
 ### aco_assert_override.h
 
@@ -434,11 +434,11 @@ Machine: [c5d.large on AWS](https://aws.amazon.com/cn/blogs/aws/now-available-co
 
 OS: RHEL-7.5 (Red Hat Enterprise Linux 7.5).
 
-Here is a brief summary of the benchmark part:
+Here is a brief summary of the benchmarks:
 
-* One time of the context switching between coroutines only takes about **10.29 ns** (for the case of standalone stack, sharing x87 and mxcsr control words between coroutines);
-* One time of the context switching between coroutines only takes about **10.38 ns** (for the case of standalone stack, each coroutine maintaining each own x87 and mxcsr control words);
-* It has the extremely memory efficiency: **10,000,000** amount of coroutines simultaneously to run only cost **2.8 GB** physical memory (run with tcmalloc, each coroutine has a **120 bytes** copy-stack size configuration).
+* Context switching between coroutines takes only about **10.29 ns** in the case of a standalone stack, where x87 and mxcsr control words are shared between coroutines
+* Context switching between coroutines takes only about **10.38 ns** in the case of a standalone stack, where each coroutine maintains their own x87 and mxcsr control words
+* It is extremely memory efficient: it only costs **2.8 GB** of physical memory to run **10,000,000** coroutines simultaneously (with tcmalloc, where each coroutine has a **120 bytes** copy-stack size configuration).
 
 ```
 $ LD_PRELOAD=/usr/lib64/libtcmalloc_minimal.so.4 ./test_aco_benchmark..no_valgrind.shareFPUenv
@@ -668,21 +668,21 @@ aco_destroy                                             100000     0.038 s      
 
 # Proof of Correctness
 
-That is essential to be very familiar with the standard of [Sys V ABI of intel386 and x86-64](https://github.com/hjl-tools/x86-psABI/wiki/X86-psABI) before you start to implement or prove a coroutine library.
+It is essential to be very familiar with the standard of [Sys V ABI of intel386 and x86-64](https://github.com/hjl-tools/x86-psABI/wiki/X86-psABI) before you start to implement or prove a coroutine library.
 
-This proof below has no direct description about the IP (instruction pointer), SP (stack pointer) and the saving/restoring between the private save stack and the share stack since these things are pretty trivial and easy understanding when they are comparing with the ABI constraints stuff.
+The proof below doesn't directly deal with updating the values of the IP (instruction pointer), SP (stack pointer) and the saving/restoring between the private save stack and the share stack, since these things are pretty trivial and easy to understand when they are compared with the ABI constraints stuff.
 
 ## Running Model
 
-In the OS thread, the main coroutine `main_co` is the one who should be created and started to execute before all the other non-main coroutine does.
+In the OS thread, the main coroutine `main_co` should be created and started first, before all the other non-main coroutines do.
 
 The next diagram is a simple example of the context switching between main_co and co.
 
-In this proof, we just assume that we are under Sys V ABI of intel386 since there is no fundamental difference between the Sys V ABI of intel386 and x86-64. We also assume that none of the code would change the control words of FPU and MXCSR.
+In this proof, we just assume that we are under Sys V ABI of intel386 since there is no fundamental differences between the Sys V ABI of intel386 and x86-64. We also assume that none of the code would change the control words of FPU and MXCSR.
 
 ![proof_0](img/proof_0.png)
 
-The next diagram is actually a symmetric coroutine's running model which has unlimited number of non-main co and one main co. This is fine because the asymmetric coroutine is just a special case of the symmetric coroutine. To prove the correctness of the symmetric coroutine is a little more challenging than asymmetric coroutine and thus more fun it would become. (libaco only implemented the API of asymmetric coroutine currently because the semantic meaning of the asymmetric coroutine API is far more easy to understand and to use than the symmetric coroutine does.)
+The next diagram is actually a symmetric coroutine's running model which has an unlimited number of non-main co-s and one main co. This is fine because the asymmetric coroutine is just a special case of the symmetric coroutine. To prove the correctness of the symmetric coroutine is a little more challenging than of the asymmetric coroutine and thus it would be more fun. (libaco only implemented the API of asymmetric coroutine currently because the semantic meaning of the asymmetric coroutine API is far more easy to understand and to use than the symmetric coroutine does.)
 
 ![proof_1](img/proof_1.png)
 
@@ -810,7 +810,7 @@ Constraints: C 2.0, 2.1, 2.2 (*satisfied* ✓ )
 
 C 2.0 & 2.1 is satisfied because there is saving & restoring of the callee saved registers when `acosw` been called/returned. Since we already assumed that nobody will change the control words of FPU and MXCSR, C 2.2 is satisfied too.
 
-3. mathematical induction:
+3. Mathematical induction:
 
 The 1st `acosw` in the thread must be the 1st case: yielded state co -> init state co, and all the next `acosw` must be one of the 2 case above. Sequentially, we could prove that "all the co constantly comply to the constraints of Sys V ABI before and after the call of `acosw`". Thus, the proof is finished.
 
@@ -840,7 +840,7 @@ Here is a [bug example](https://github.com/Tencent/libco/blob/v1.0/coctx_swap.S#
 >
 >— man 7 signal : Signal dispositions
 
-Terrible things may happend if the `(E|R)SP`  is pointing to the data structure on the heap when signal comes. (Using the `breakpoint` and `signal` commands of gdb could produce such bug conveniently. Although by using `sigalstack` to change the default signal stack could alleviate the problem, but still, that kind of usage of `(E|R)SP` still violates the ABI.)
+Terrible things may happen if the `(E|R)SP`  is pointing to the data structure on the heap when signal comes. (Using the `breakpoint` and `signal` commands of gdb could produce such bug conveniently. Although by using `sigalstack` to change the default signal stack could alleviate the problem, but still, that kind of usage of `(E|R)SP` still violates the ABI.)
 
 # Best Practice
 
@@ -858,11 +858,11 @@ In detail, there are 5 tips:
 yield  f3     f5
 ```
 
-1. The stack usage of main co has no direct influence to the performance of context switching between coroutines (since it has a standalone execution stack);
+1. The stack usage of main co has no doesn't directly affect the performance of context switching between coroutines (since it has a standalone execution stack);
 2. The stack usage of standalone non-main co has no direct influence to the performance of context switching between coroutines. But a huge amount of standalone non-main co would cost too much of virtual memory (due to the standalone stack), so it is not recommended to create huge amount of standalone non-main co in one thread;
-3. The stack usage of non-standalone (share stack with other coroutines) non-main co when it is been yielded (i.e. call `aco_yield` to yield back to main co) has big impact to the performance of context switching between coroutines. The benchmark result shows that clearly already. In the diagram above, the stack usage of function f2, f3, f4 and f5 has no direct influence to context switching performance since there are no `aco_yield` when they are executing. Whereas the stack usage of co_fp and f1 dominates the value of `co->save_stack.max_cpsz` and has a big influence to the context switching performance.
+3. The stack usage of a non-standalone (shares stack with other coroutines) non-main co when it is been yielded (i.e. call `aco_yield` to yield back to main co) has a big impact to the performance of context switching between coroutines, as indicated by the benchmark results. In the diagram above, the stack usage of function f2, f3, f4 and f5 has no direct influence over the context switching performance since there are no `aco_yield` when they are executing, whereas the stack usage of co_fp and f1 dominates the value of `co->save_stack.max_cpsz` and has a big influence over the context switching performance.
 
-The key to keep a tiny stack usage of a function is to allocate the local variables (especially the big ones) on the heap and manage their lifecycle manually instead of allocating them on the stack by default. The `-fstack-usage` option of gcc is very helpful about this.
+The key to keeping the stack usage of a function as low as possible is to allocate the local variables (especially the big ones) on the heap and manage their lifecycle manually instead of allocating them on the stack by default. The `-fstack-usage` option of gcc is very helpful about this.
 
 ```c
 int* gl_ptr;
