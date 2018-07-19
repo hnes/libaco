@@ -31,7 +31,6 @@ matrix:
     - os: linux
     - os: osx
 
-     osx
     - os: osx
       osx_image: xcode7.3
       compiler: clang
