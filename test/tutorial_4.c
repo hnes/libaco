@@ -12,13 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Test the customization of aco protector.
-
 #include "aco.h"    
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
-
 #include "aco_assert_override.h"
 
 void foo(int ct){
@@ -47,18 +44,13 @@ void co_fp0()
         this_co, this_co->save_stack.ptr,
         this_co->share_stack->ptr
     );
-    printf("Intended to Abort to test the aco protector :)\n");
-    return;
+    //printf("Intended to Abort to test the aco protector :)\n");
+    // the offending `return` here it is
+    // you should always call `aco_exit()` to finish the execution of a non-main co
+    // instead of call `return` in the real application
+    // this is a demo shows how protector works in libaco (intended to abort)
+    //return;
     aco_exit();
-    assert(0);
-}
-
-static void co_protector_last_word(){
-    aco_t* co = aco_get_co();
-    // do some log about the offending `co`
-    fprintf(stderr,"error: customized co_protector_last_word triggered \n");
-    fprintf(stderr, "error: co:%p should call `aco_exit(co)` instead of direct "
-        "`return` in co_fp:%p to finish its execution\n", co, (void*)co->fp);
     assert(0);
 }
 
@@ -72,7 +64,7 @@ int main() {
     }
 #endif
 
-    aco_thread_init(co_protector_last_word);
+    aco_thread_init(NULL);
 
     aco_t* main_co = aco_create(NULL, NULL, 0, NULL, NULL);
     assertptr(main_co);

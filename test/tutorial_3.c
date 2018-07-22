@@ -64,6 +64,7 @@ void co_fp0()
 void* pmain(void* pthread_in_arg) {
     pthread_t t = pthread_self();
     size_t idx = 0;
+    (void)pthread_in_arg;
     assert(sizeof(t) > 0);
     printf("\ntid:0x");
     while(idx < sizeof(t)){
