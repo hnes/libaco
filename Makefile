@@ -14,7 +14,7 @@
 
 .SILENT:
 .DEFAULT_GOAL := all
-.PHONY: clean conf debug dev fclean install re reconf san
+.PHONY: clean conf debug dev fclean install re reconf
 
 BUILD_TYPE ?= Release
 BUILD_DIR ?= build/$(BUILD_TYPE)
@@ -92,9 +92,6 @@ reconf: mrproper conf
 
 debug dev:
 	$(MAKE) BUILD_TYPE=Debug
-
-san:
-	$(MAKE) BUILD_TYPE=San
 
 clean:
 	[ -d $(BUILD_PROJ_DIR) ] && find $(BUILD_PROJ_DIR) -name "*.o" -delete
