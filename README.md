@@ -11,8 +11,8 @@ Currently supports Sys V ABI of Intel386 and x86-64.
 Here is a brief summary of this project:
 
 - Along with the implementation of a production-ready C coroutine library, here is a detailed documentation about how to implement a *fastest* and *correct* coroutine library and also with a strict [mathematical proof](#proof-of-correctness);
-- It has no more than 700 LOC but has the full function you may want from a coroutine library;
-- The [benchmark](#benchmark) part shows that one time of the context switching between coroutines only takes about *10 ns* (for the case of standalone stack) on the AWS c5d.large machine;
+- It has no more than 700 LOC but has the full functionality which you may want from a coroutine library;
+- The [benchmark](#benchmark) part shows that one time of the context switching between coroutines only takes about *10 ns* (in the case of standalone stack) on the AWS c5d.large machine;
 - User could choose to create a new coroutine with a *standalone stack* or with a *share stack* (could be shared with others);
 - It is extremely memory efficient: *10,000,000* amount of co simultaneously to run only cost *2.8 GB* physical memory (run with tcmalloc, each co has a *120B* copy-stack size configuration).
 
@@ -167,7 +167,7 @@ For more information you may refer to the "[Build and Test](#build-and-test)" pa
 
 ![thread_model_0](img/thread_model_0.png)
 
-There are 4 basic elements of an ordinary execution state: `{cpu_registers, code, heap, stack}`. 
+There are 4 basic elements of an ordinary execution state: `{cpu_registers, code, heap, stack}`.
 
 Since the code information is indicated by `({E|R})?IP` register, and the address of the memory allocated from heap is normally stored in the stack directly or indirectly, thus we could simplify the 4 elements into only 2 of them: `{cpu_registers, stack}`.
 
@@ -206,6 +206,8 @@ You could define the global C macro `ACO_CONFIG_SHARE_FPU_MXCSR_ENV` to speed up
 If you want to use the tool memcheck of valgrind to test the application, then you may need to define the global C macro `ACO_USE_VALGRIND` to enable the friendly support of valgrind in libaco. But it is not recommended to define this macro in the final release build for the performance reason. You may also need to install the valgrind headers (package name is "valgrind-devel" in centos for example) to build libaco application with C macro `ACO_USE_VALGRIND` defined. (The memcheck of valgrind only works well with the standalone co currently. In the case of the shared stack used by more than one non-main co, the memcheck of valgrind would generate many false positive reports. For more information you may refer to "[test_aco_tutorial_6.c](test_aco_tutorial_6.c)".)
 
 ## Build
+
+To build the test suites of libaco:
 
 ```bash
 $ mkdir output
@@ -257,6 +259,8 @@ The last example is a simple coroutine scheduler in `test_aco_tutorial_6.c`.
 # API
 
 It would be very helpful to read the corresponding API implementation in the source code simultaneously when you are reading the following API description of libaco since the source code is pretty clear and easy to understand. And it is also recommended to read all the [tutorials](#tutorials) before reading the API document.
+
+It is strongly recommended to read the [Best Practice](#best-practice) part before starting to write the real application of libaco (in addition to describing how to truly release libaco's extreme performance in your application, there is also a notice about the programming of libaco).
 
 Note: The version control of libaco follows the spec: [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html). So the API in the following list have the compatibility guarantee. (Please note that there is no such guarantee for the API no in the list.)
 
@@ -916,7 +920,7 @@ void co_fp1() {
 
 New ideas are welcome!
 
-* Add a macro `aco_new` which is the combination of something like `p = malloc(sz); assertalloc_ptr(p)`.
+* Add a macro like `aco_mem_new` which is the combination of something like `p = malloc(sz); assertalloc_ptr(p)`.
 
 * Add a new API `aco_reset` to support the reusability of the coroutine objects.
 
