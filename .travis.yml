@@ -7,10 +7,6 @@ notifications:
 
 language: c
 
-compiler:
-  - gcc
-  - clang
-
 script:
     - echo $TRAVIS_EVENT_TYPE
     - echo $TRAVIS_OS_NAME
@@ -29,3 +25,26 @@ script:
     - echo ""
     - if [ "$TRAVIS_OS_NAME" = "linux" ] ; then mkdir output ; bash make.sh -o no-valgrind -o no-m32 ; ls output ; ls output | wc -l ; cd output ; bash ../test.sh ; cd .. ; rm -fr output; fi
     - echo "" ; date
+
+matrix:
+  include:
+    - os: linux
+      compiler: gcc-4.9
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - gcc-4.9
+    - os: linux
+      compiler: clang-3.5
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-trusty-3.5
+          packages:
+            - clang-3.5
+    - os: osx
+      osx_image: xcode8.3
+      compiler: clang
