@@ -16,7 +16,11 @@ OUTPUT_DIR="./output"
 CFLAGS="-g -O2 -Wall -Werror"
 EXTRA_CFLAGS=""
 OUTPUT_SUFFIX=""
-CC="cc"
+makecc="cc"
+if [ "$CC" ]
+then
+    makecc="$CC"
+fi
 
 app_list='''
 test_aco_tutorial_0
@@ -80,7 +84,7 @@ function build_f(){
             continue  
         fi
         #echo "<$file>:<$cflags>:$OUTPUT_DIR:$CFLAGS:$EXTRA_CFLAGS:$OUTPUT_SUFFIX"
-        build_cmd="$CC $CFLAGS $EXTRA_CFLAGS acosw.S aco.c $file.c $cflags -o $OUTPUT_DIR/$file$OUTPUT_SUFFIX"
+        build_cmd="$makecc $CFLAGS $EXTRA_CFLAGS acosw.S aco.c $file.c $cflags -o $OUTPUT_DIR/$file$OUTPUT_SUFFIX"
         skip_flag=""
         if [ "$gl_opt_no_m32" ]
         then
