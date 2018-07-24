@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ulimit -c unlimited
+#ulimit -c unlimited
 
 gl_trap_str=""
 
@@ -107,8 +107,8 @@ function test_f(){
     declare errc
     declare test_ct
     declare infile
-    test_ct=`file * | grep -P "ELF.*executable" | grep -Po '^[^:]+' | wc -l`
-    file * | grep -P "ELF.*executable" | grep -Po '^[^:]+' | while read infile
+    test_ct=`file * | grep -P "\bexecutable\b" | grep -Po '^[^:]+' | wc -l`
+    file * | grep -P "\bexecutable\b" | grep -Po '^[^:]+' | while read infile
     do
         test_f_is_exclude_app "$infile"
         if [ "0" -eq "$?" ]

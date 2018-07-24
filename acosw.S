@@ -1,6 +1,9 @@
 .text
 .globl acosw
+#if defined(__APPLE__)
+#else
 .type  acosw, @function
+#endif
 .intel_syntax noprefix
 acosw:
 /*
@@ -120,7 +123,10 @@ acosw:
 #endif
 
 .globl aco_save_fpucw_mxcsr
+#if defined(__APPLE__)
+#else
 .type  aco_save_fpucw_mxcsr, @function
+#endif
 .intel_syntax noprefix
 aco_save_fpucw_mxcsr:
 #ifdef __i386__
@@ -136,33 +142,51 @@ aco_save_fpucw_mxcsr:
     #error "platform not support"
 #endif
 
+#if defined(__APPLE__)
+.globl _abort
+.globl _aco_funcp_protector
+#else
 .globl abort
 .globl aco_funcp_protector
+#endif
 
 .globl aco_funcp_protector_asm
+#if defined(__APPLE__)
+#else
 .type  aco_funcp_protector_asm, @function
+#endif
 .intel_syntax noprefix
 aco_funcp_protector_asm:
 #ifdef __i386__
-    and     esp,0xfffffff0
-#if defined(__pic__) || defined(__PIC__)
-    call    aco_funcp_protector@PLT
-    call    abort@PLT
-#else
-    call    aco_funcp_protector
-    call    abort
-#endif
-    ret
+            and     esp,0xfffffff0
+    #if defined(__APPLE__)
+            call    _aco_funcp_protector
+            call    _abort
+    #else
+        #if defined(__pic__) || defined(__PIC__)
+            call    aco_funcp_protector@PLT
+            call    abort@PLT
+        #else
+            call    aco_funcp_protector
+            call    abort
+        #endif
+    #endif
+            ret
 #elif __x86_64__
-    and     rsp,0xfffffffffffffff0
-#if defined(__pic__) || defined(__PIC__)
-    call    aco_funcp_protector@PLT
-    call    abort@PLT
-#else
-    call    aco_funcp_protector
-    call    abort
-#endif
-    ret
+            and     rsp,0xfffffffffffffff0
+    #if defined(__APPLE__)
+            call    _aco_funcp_protector
+            call    _abort
+    #else
+        #if defined(__pic__) || defined(__PIC__)
+            call    aco_funcp_protector@PLT
+            call    abort@PLT
+        #else
+            call    aco_funcp_protector
+            call    abort
+        #endif
+    #endif
+            ret
 #else
     #error "platform not support"
 #endif
