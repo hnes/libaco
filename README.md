@@ -205,6 +205,10 @@ You could define the global C macro `ACO_CONFIG_SHARE_FPU_MXCSR_ENV` to speed up
 
 If you want to use the tool memcheck of valgrind to test the application, then you may need to define the global C macro `ACO_USE_VALGRIND` to enable the friendly support of valgrind in libaco. But it is not recommended to define this macro in the final release build for the performance reason. You may also need to install the valgrind headers (package name is "valgrind-devel" in centos for example) to build libaco application with C macro `ACO_USE_VALGRIND` defined. (The memcheck of valgrind only works well with the standalone co currently. In the case of the shared stack used by more than one non-main co, the memcheck of valgrind would generate many false positive reports. For more information you may refer to "[test_aco_tutorial_6.c](test_aco_tutorial_6.c)".)
 
+* C macro:`ACO_USE_ASAN`
+
+The global C macro `ACO_USE_ASAN` would enable the friendly support of [Address Sanitizer](https://en.wikipedia.org/wiki/AddressSanitizer) in libaco (support both gcc and clang).
+
 ## Build
 
 To build the test suites of libaco:
@@ -232,6 +236,13 @@ Example:
 ```
 
 In short, using `-o no-valgrind ` if you have no valgrind headers installed, `-o no-m32` if you have no 32-bit gcc development tools installed on a AMD64 host.
+
+On MacOS, you need to [replace](https://apple.stackexchange.com/questions/69223/how-to-replace-mac-os-x-utilities-with-gnu-core-utilities) the default `sed` and `grep` commands of MacOS with the GNU `sed` and `grep` to run `make.sh` and `test.sh` (such requirement would be removed in the future):
+
+```bash
+$ brew install grep --with-default-names
+$ brew install gnu-sed --with-default-names
+```
 
 ## Test
 
