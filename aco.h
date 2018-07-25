@@ -136,6 +136,9 @@ struct aco_s{
     }   \
 } while(0)
 
+#if defined(aco_attr_no_asan)
+    #error "aco_attr_no_asan already defined"
+#endif
 #if defined(ACO_USE_ASAN)
     #if defined(__has_feature)
         #if __has_feature(address_sanitizer)
