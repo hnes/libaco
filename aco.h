@@ -136,6 +136,22 @@ struct aco_s{
     }   \
 } while(0)
 
+#if defined(ACO_USE_ASAN)
+    #if defined(__has_feature)
+        #if __has_feature(address_sanitizer)
+            #define aco_attr_no_asan \
+                __attribute__((__no_sanitize_address__))
+        #endif
+    #endif
+    #if defined(__SANITIZE_ADDRESS__) && !defined(aco_attr_no_asan)
+        #define aco_attr_no_asan \
+            __attribute__((__no_sanitize_address__))
+    #endif
+#endif
+#ifndef aco_attr_no_asan
+    #define aco_attr_no_asan
+#endif
+
 extern void aco_runtime_test(void);
 
 extern void aco_thread_init(aco_cofuncp_t last_word_co_fp);
@@ -164,6 +180,7 @@ extern aco_t* aco_create(
 // aco's Global Thread Local Storage variable `co`
 extern __thread aco_t* aco_gtls_co;
 
+aco_attr_no_asan
 extern void aco_resume(aco_t* resume_co);
 
 //extern void aco_yield1(aco_t* yield_co);
