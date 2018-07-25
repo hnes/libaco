@@ -973,7 +973,7 @@ v1.0   Sun Jul 1 2018
 
 # Copyright and License
 
-Copyright (C) 2018, by Sen Han [00hnes@gmail.com](mailto:00hnes@gmail.com).
+Copyright (C) 2018, by Sen Han [<00hnes@gmail.com>](mailto:00hnes@gmail.com).
 
 Under the Apache License, Version 2.0.
 

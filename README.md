@@ -972,7 +972,7 @@ I'm a full-time open source developer. Any amount of the donations will be highl
 
 # Copyright and License
 
-Copyright (C) 2018, by Sen Han [00hnes@gmail.com](mailto:00hnes@gmail.com).
+Copyright (C) 2018, by Sen Han [<00hnes@gmail.com>](mailto:00hnes@gmail.com).
 
 Under the Apache License, Version 2.0.
 
