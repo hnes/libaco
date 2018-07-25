@@ -19,7 +19,7 @@
 gl_trap_str=""
 
 function error(){
-    echo "$*" > /proc/self/fd/2
+    >&2 echo "$*"
 }
 
 function assert(){
@@ -146,6 +146,51 @@ function test_f(){
 }
 
 tra "echo;echo test had been interrupted;exit 0;"
+
+version_check_flag=`echo $1 | grep -Po "\bversion_check\b="`
+version_to_check=`echo $1 | grep -Po "[0-9]+\.[0-9]+\.[0-9]+" | head -1`
+version_major=`echo $version_to_check | grep -Po "^[0-9]+(?=\.)"`
+version_minor=`echo $version_to_check | grep -Po "(?<=\.)[0-9]+(?=\.)"`
+version_patch=`echo $version_to_check | grep -Po "(?<=\.)[0-9]+$"`
+echo "$version_check_flag |$version_to_check|"
+echo "|$version_major|$version_minor|$version_patch|"
+
+makecc="cc"
+if [ "$CC" ]
+then
+    makecc="$CC"
+fi
+
+if [ "$version_check_flag" ]
+then
+    if [ "$version_major" -lt 0 ] || [ "$version_minor" -lt 0 ] || [ "$version_patch" -lt 0 ]
+    then
+        error "synatx error: version_to_check: $version_to_check"
+        exit 1
+    fi
+    version_check_tmpdir=`mktemp -d`
+    version_check_tmpfile="$version_check_tmpdir"/tmp.c
+    echo '''        #include "aco.h"
+        #include <stdio.h>
+        #include "aco_assert_override.h"
+
+        int main() {''' > $version_check_tmpfile
+    echo "        assert(ACO_VERSION_MAJOR == $version_major);" \
+        >> $version_check_tmpfile
+    echo "        assert(ACO_VERSION_MINOR == $version_minor);" \
+        >> $version_check_tmpfile
+    echo "        assert(ACO_VERSION_PATCH == $version_patch);" \
+        >> $version_check_tmpfile
+    echo "        return 0;" >> $version_check_tmpfile
+    echo "        }" >> $version_check_tmpfile
+    echo "$version_check_tmpfile:"
+    cat $version_check_tmpfile
+    $makecc -I. -g -O2 acosw.S aco.c -o "$version_check_tmpfile".bin $version_check_tmpfile
+    "$version_check_tmpfile".bin
+    assert "error: version_check failed: $version_to_check"
+    rm -fr "$version_check_tmpdir"
+    exit 0
+fi
 
 # test loop
 while true

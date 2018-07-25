@@ -43,7 +43,7 @@ OUTPUT_DIR=`dirname "$OUTPUT_DIR"`
 gl_trap_str=""
 
 function error(){
-    echo "error: $*" > /proc/self/fd/2
+    >&2 echo "error: $*"
 }
 
 function assert(){

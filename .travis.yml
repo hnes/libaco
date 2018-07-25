@@ -17,6 +17,8 @@ script:
     - if [ "$TRAVIS_OS_NAME" = "linux" ] ; then sudo apt-get install -qq -y libreadline-dev libncurses5-dev libpcre3-dev libssl-dev perl make build-essential valgrind gcc-multilib g++-multilib libc6-dbg libc6-dbg:i386 ; fi
     - date
     - echo ""
+    - bash test.sh version_check=1.2.2
+    - echo ""
     - if [ "$TRAVIS_OS_NAME" = "linux" ] ; then mkdir output ; bash make.sh ; ls output ; ls output | wc -l ; cd output ; bash ../test.sh ; cd .. ; rm -fr output; fi
     - echo ""
     - if [ "$TRAVIS_OS_NAME" = "linux" ] ; then mkdir output ; bash make.sh -o no-m32 ; ls output ; ls output | wc -l ; cd output ; bash ../test.sh ; cd .. ; rm -fr output; fi
