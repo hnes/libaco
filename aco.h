@@ -141,7 +141,7 @@ struct aco_s{
 #endif
 #if defined(ACO_USE_ASAN)
     #if defined(__has_feature)
-        #if __has_feature(address_sanitizer)
+        #if __has_feature(__address_sanitizer__)
             #define aco_attr_no_asan \
                 __attribute__((__no_sanitize_address__))
         #endif
