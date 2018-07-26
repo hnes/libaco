@@ -943,12 +943,12 @@ New ideas are welcome!
 v1.2.3 Thu Jul 26 2018
     Added support for MacOS;
     Added support for shared library build of libaco (PR #10, proposed
-    by Theo Schlossnagle <theo.schlossnagle@circonus.com>);
+    by Theo Schlossnagle @postwait);
     Added C macro ACO_REG_IDX_BP in aco.h (PR #15, proposed by
-    Theo Schlossnagle <theo.schlossnagle@circonus.com>);
+    Theo Schlossnagle @postwait);
     Added global C config macro ACO_USE_ASAN which could enable the
     friendly support of address sanitizer (both gcc and clang) (PR #14,
-    proposed by Theo Schlossnagle <theo.schlossnagle@circonus.com>);
+    proposed by Theo Schlossnagle @postwait);
     Added README_zh.md.
 v1.2.2 Mon Jul 9 2018
     Added a new option `-o <no-m32|no-valgrind>` to make.sh;
