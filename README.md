@@ -414,7 +414,7 @@ Destroy the `co`. The argument `co` must not be NULL. The private save stack wou
 ```c
 #define ACO_VERSION_MAJOR 1
 #define ACO_VERSION_MINOR 2
-#define ACO_VERSION_PATCH 2
+#define ACO_VERSION_PATCH 3
 ```
 
 These 3 macros are defined in the header `aco.h` and the value of them follows the spec: [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html).
@@ -940,6 +940,16 @@ New ideas are welcome!
 # CHANGES
 
 ```
+v1.2.3 Thu Jul 26 2018
+    Added support for MacOS;
+    Added support for shared library build of libaco (PR #10, proposed
+    by Theo Schlossnagle <theo.schlossnagle@circonus.com>);
+    Added C macro ACO_REG_IDX_BP in aco.h (PR #15, proposed by
+    Theo Schlossnagle <theo.schlossnagle@circonus.com>);
+    Added global C config macro ACO_USE_ASAN which could enable the
+    friendly support of address sanitizer (both gcc and clang) (PR #14,
+    proposed by Theo Schlossnagle <theo.schlossnagle@circonus.com>);
+    Added README_zh.md.
 v1.2.2 Mon Jul 9 2018
     Added a new option `-o <no-m32|no-valgrind>` to make.sh;
     Correction about the value of macro ACO_VERSION_PATCH (issue #1 
