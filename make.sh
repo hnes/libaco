@@ -14,7 +14,7 @@
 
 OUTPUT_DIR="./output"
 CFLAGS="-g -O2 -Wall -Werror"
-EXTRA_CFLAGS=""
+#EXTRA_CFLAGS=""
 OUTPUT_SUFFIX=""
 makecc="cc"
 if [ "$CC" ]
@@ -71,10 +71,11 @@ function build_f(){
     declare build_cmd
     declare tmp_ret
     declare skip_flag
-    echo "OUTPUT_DIR:    $OUTPUT_DIR"
-    echo "CFLAGS:        $CFLAGS"
-    echo "EXTRA_CFLAGS:  $EXTRA_CFLAGS"
-    echo "OUTPUT_SUFFIX: $OUTPUT_SUFFIX"
+    echo "OUTPUT_DIR:       $OUTPUT_DIR"
+    echo "CFLAGS:           $CFLAGS"
+    echo "EXTRA_CFLAGS:     $EXTRA_CFLAGS"
+    echo "ACO_EXTRA_CFLAGS: $ACO_EXTRA_CFLAGS"
+    echo "OUTPUT_SUFFIX:    $OUTPUT_SUFFIX"
     echo "$app_list" | grep -Po '.+$' | while read read_in
     do
         file=`echo $read_in | grep -Po "^[^\s]+"`
@@ -84,7 +85,7 @@ function build_f(){
             continue  
         fi
         #echo "<$file>:<$cflags>:$OUTPUT_DIR:$CFLAGS:$EXTRA_CFLAGS:$OUTPUT_SUFFIX"
-        build_cmd="$makecc $CFLAGS $EXTRA_CFLAGS acosw.S aco.c $file.c $cflags -o $OUTPUT_DIR/$file$OUTPUT_SUFFIX"
+        build_cmd="$makecc $CFLAGS $ACO_EXTRA_CFLAGS $EXTRA_CFLAGS acosw.S aco.c $file.c $cflags -o $OUTPUT_DIR/$file$OUTPUT_SUFFIX"
         skip_flag=""
         if [ "$gl_opt_no_m32" ]
         then
@@ -182,18 +183,18 @@ tra "echo;echo build has been interrupted"
 # the matrix of the build config for later testing
 # -m32 -DACO_CONFIG_SHARE_FPU_MXCSR_ENV -DACO_USE_VALGRIND
 # 0 0 0
-EXTRA_CFLAGS="" OUTPUT_SUFFIX="..no_valgrind.standaloneFPUenv" build_f
+ACO_EXTRA_CFLAGS="" OUTPUT_SUFFIX="..no_valgrind.standaloneFPUenv" build_f
 # 0 0 1
-EXTRA_CFLAGS="-DACO_USE_VALGRIND" OUTPUT_SUFFIX="..valgrind.standaloneFPUenv" build_f
+ACO_EXTRA_CFLAGS="-DACO_USE_VALGRIND" OUTPUT_SUFFIX="..valgrind.standaloneFPUenv" build_f
 # 0 1 0
-EXTRA_CFLAGS="-DACO_CONFIG_SHARE_FPU_MXCSR_ENV" OUTPUT_SUFFIX="..no_valgrind.shareFPUenv" build_f
+ACO_EXTRA_CFLAGS="-DACO_CONFIG_SHARE_FPU_MXCSR_ENV" OUTPUT_SUFFIX="..no_valgrind.shareFPUenv" build_f
 # 0 1 1
-EXTRA_CFLAGS="-DACO_CONFIG_SHARE_FPU_MXCSR_ENV -DACO_USE_VALGRIND" OUTPUT_SUFFIX="..valgrind.shareFPUenv" build_f
+ACO_EXTRA_CFLAGS="-DACO_CONFIG_SHARE_FPU_MXCSR_ENV -DACO_USE_VALGRIND" OUTPUT_SUFFIX="..valgrind.shareFPUenv" build_f
 # 1 0 0
-EXTRA_CFLAGS="-m32" OUTPUT_SUFFIX="..m32.no_valgrind.standaloneFPUenv" build_f
+ACO_EXTRA_CFLAGS="-m32" OUTPUT_SUFFIX="..m32.no_valgrind.standaloneFPUenv" build_f
 # 1 0 1
-EXTRA_CFLAGS="-m32 -DACO_USE_VALGRIND" OUTPUT_SUFFIX="..m32.valgrind.standaloneFPUenv" build_f
+ACO_EXTRA_CFLAGS="-m32 -DACO_USE_VALGRIND" OUTPUT_SUFFIX="..m32.valgrind.standaloneFPUenv" build_f
 # 1 1 0
-EXTRA_CFLAGS="-m32 -DACO_CONFIG_SHARE_FPU_MXCSR_ENV" OUTPUT_SUFFIX="..m32.no_valgrind.shareFPUenv" build_f
+ACO_EXTRA_CFLAGS="-m32 -DACO_CONFIG_SHARE_FPU_MXCSR_ENV" OUTPUT_SUFFIX="..m32.no_valgrind.shareFPUenv" build_f
 # 1 1 1
-EXTRA_CFLAGS="-m32 -DACO_CONFIG_SHARE_FPU_MXCSR_ENV -DACO_USE_VALGRIND" OUTPUT_SUFFIX="..m32.valgrind.shareFPUenv" build_f
+ACO_EXTRA_CFLAGS="-m32 -DACO_CONFIG_SHARE_FPU_MXCSR_ENV -DACO_USE_VALGRIND" OUTPUT_SUFFIX="..m32.valgrind.shareFPUenv" build_f
