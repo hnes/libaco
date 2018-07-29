@@ -18,7 +18,7 @@ script:
     - date
     - export EXTRA_CFLAGS=""
     - echo ""
-    - bash test.sh version_check=1.2.3
+    - bash test.sh version_check=1.2.4
     - echo ""
     - if [ "$TRAVIS_OS_NAME" = "linux" ] ; then mkdir output ; bash make.sh ; ls output ; ls output | wc -l ; cd output ; bash ../test.sh ; cd .. ; rm -fr output; fi
     - echo ""

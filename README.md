@@ -414,7 +414,7 @@ Destroy the `co`. The argument `co` must not be NULL. The private save stack wou
 ```c
 #define ACO_VERSION_MAJOR 1
 #define ACO_VERSION_MINOR 2
-#define ACO_VERSION_PATCH 3
+#define ACO_VERSION_PATCH 4
 ```
 
 These 3 macros are defined in the header `aco.h` and the value of them follows the spec: [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html).
@@ -940,6 +940,9 @@ New ideas are welcome!
 # CHANGES
 
 ```
+v1.2.4 Sun Jul 29 2018
+    Changed `asm` to `__asm__` in aco.h to support compiler's `--std=c99`
+    flag (Issue #16, proposed by Theo Schlossnagle @postwait).
 v1.2.3 Thu Jul 26 2018
     Added support for MacOS;
     Added support for shared library build of libaco (PR #10, proposed

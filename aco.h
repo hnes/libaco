@@ -34,7 +34,7 @@ extern "C" {
 
 #define ACO_VERSION_MAJOR 1
 #define ACO_VERSION_MINOR 2
-#define ACO_VERSION_PATCH 3
+#define ACO_VERSION_PATCH 4
 
 #ifdef __i386__
     #define ACO_REG_IDX_RETADDR 0
