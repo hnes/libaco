@@ -11,6 +11,17 @@ $ # coroutines with standalone stack is fine
 $ time valgrind --leak-check=full --error-exitcode=2 --tool=memcheck ./val_standalone_stack_co
 $ # coroutines share same stack (by copy-stack) would get many false positive reports when memcpy occurrs
 $ time valgrind --leak-check=full --error-exitcode=2 --tool=memcheck ./val_copystack_co
+$ echo $?
+$ cat libaco.supp
+{
+   <aco_resume>
+   Memcheck:Addr8
+   fun:memcpy*
+   fun:aco_resume
+   ...
+}
+$ time valgrind --leak-check=full --error-exitcode=2 --tool=memcheck --suppressions=./libaco.supp ./val_copystack_co
+$ echo $?
 ```
 
 -------
