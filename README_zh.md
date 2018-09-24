@@ -297,7 +297,7 @@ aco_share_stack_t* aco_share_stack_new2(size_t sz, char guard_page_enabled);
 
 * `final_valid_sz >= 4096`
 * `final_valid_sz >= sz`
-* `final_valid_sz % page_size == 0 if the guard_page_enabled == 0`
+* `final_valid_sz % page_size == 0 if the guard_page_enabled != 0`
 
 并且尽可能的接近入参`sz`的值。
 

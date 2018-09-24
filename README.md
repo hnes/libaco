@@ -311,7 +311,7 @@ To use the default size value (2MB) if the 1st argument `sz` equals 0. After som
 
 * `final_valid_sz >= 4096`
 * `final_valid_sz >= sz`
-* `final_valid_sz % page_size == 0 if the guard_page_enabled == 0`
+* `final_valid_sz % page_size == 0 if the guard_page_enabled != 0`
 
 And as close to the value of `sz` as possible.
 
