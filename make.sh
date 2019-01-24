@@ -178,6 +178,20 @@ shift $((OPTIND-1))
 #echo "gl_opt_no_valgrind:$gl_opt_no_valgrind"
 #echo "gl_opt_no_m32:$gl_opt_no_m32"
 
+if [ -e "$OUTPUT_DIR" ]
+then
+    if [ -d "$OUTPUT_DIR" ]
+    then
+        :
+    else
+        error "\"$OUTPUT_DIR\" is not a directory"
+        exit 1
+    fi
+else
+    error "directory \"$OUTPUT_DIR\" doesn't exist"
+    exit 1
+fi
+
 tra "echo;echo build has been interrupted"
 
 # the matrix of the build config for later testing
