@@ -12,10 +12,12 @@ script:
     - echo $TRAVIS_OS_NAME
     - echo $CC
     - cc --version
-    - if [ "$TRAVIS_OS_NAME" = "osx" ] ; then brew update; brew install grep --with-default-names; fi
-    - if [ "$TRAVIS_OS_NAME" = "osx" ] ; then brew install gnu-sed --with-default-names; fi
+    - if [ "$TRAVIS_OS_NAME" = "osx" ] ; then brew update; brew install grep;export PATH="/usr/local/opt/grep/libexec/gnubin:$PATH"; fi
+    - if [ "$TRAVIS_OS_NAME" = "osx" ] ; then brew install gnu-sed;export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"; fi
     - if [ "$TRAVIS_OS_NAME" = "linux" ] ; then sudo apt-get install -qq -y libreadline-dev libncurses5-dev libpcre3-dev libssl-dev perl make build-essential valgrind gcc-multilib g++-multilib libc6-dbg libc6-dbg:i386 ; fi
     - date
+    - grep -V
+    - sed --version
     - export EXTRA_CFLAGS=""
     - echo ""
     - bash test.sh version_check=1.2.4
@@ -58,3 +60,6 @@ matrix:
             - llvm-toolchain-trusty-3.5
           packages:
             - clang-3.5
+    - os: osx
+      osx_image: xcode8.3
+      compiler: clang
