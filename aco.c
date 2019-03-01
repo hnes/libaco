@@ -355,6 +355,7 @@ aco_t* aco_create(
         p->fp = fp;
         p->share_stack = NULL;
         p->save_stack.ptr = NULL;
+        aco_gtls_co = p;
         return p;
     }
     assert(0);
