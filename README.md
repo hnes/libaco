@@ -266,7 +266,7 @@ One of the rules in libaco is to call `aco_exit()` to terminate the execution of
 
 You could also define your own protector to substitute the default one (to do some customized "last words" stuff). But no matter in what case, the process will be aborted after the protector was executed. The `test_aco_tutorial_5.c` shows how to define the customized last word function.
 
-The last example is a simple coroutine scheduler in `test_aco_tutorial_6.c`.
+The example `test_aco_tutorial_6.c` is a simple coroutine scheduler. And the last example, namely `test_aco_tutorial_7.c`, is the same scheduler using `aco_yield_to`.
 
 # API
 
