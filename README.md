@@ -50,6 +50,7 @@ Note: Please use [releases][github-release] instead of the `master` to build the
       * [aco_create](#aco_create)
       * [aco_resume](#aco_resume)
       * [aco_yield](#aco_yield)
+      * [aco_yield_to](#aco_yield_to)
       * [aco_get_co](#aco_get_co)
       * [aco_get_arg](#aco_get_arg)
       * [aco_exit](#aco_exit)
@@ -374,6 +375,18 @@ void aco_yield();
 Yield the execution of `co` and resume `co->main_co`. The caller of this function must be a non-main co. And `co->main_co` must not be NULL.
 
 After the call of `aco_yield`, we name the state of the caller — `co` as "yielded".
+
+## aco_yield_to
+
+```c
+void aco_yield_to(aco_t* resume_co);
+```
+
+Yield the execution of `co` and resume `resume_co`. The caller of this function must be a non-main co (i.e. `co->main_co` is not NULL). If `co` is different of `resume_co`, they cannot share the same stack and `co->main_co` and `resume_co->main_co` must be equal.
+
+After the call of `aco_yield_to`, we name the state of the caller — `co` as "yielded".
+
+`aco_yield_to()` is useful when a non-main co wants to yield to another co with a single context switch. Without `aco_yield_to()`, one has to go through two switches: one switch back to main co and another switch to the desired non-main co.
 
 ## aco_get_co
 

@@ -186,6 +186,9 @@ extern __thread aco_t* aco_gtls_co;
 aco_attr_no_asan
 extern void aco_resume(aco_t* resume_co);
 
+aco_attr_no_asan
+void aco_yield_to(aco_t* resume_co);
+
 //extern void aco_yield1(aco_t* yield_co);
 #define aco_yield1(yield_co) do {             \
     aco_assertptr((yield_co));                    \
