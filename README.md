@@ -213,6 +213,10 @@ The global C macro `ACO_USE_ASAN` would enable the friendly support of [Address 
 
 To build the test suites of libaco:
 
+### Default Build Dependencies
+* valgrind development library
+* glibc 32 bit development library 
+
 ```bash
 $ mkdir output
 $ bash make.sh
