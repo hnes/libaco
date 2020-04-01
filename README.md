@@ -78,10 +78,6 @@ Production ready.
 #include "aco.h"    
 #include <stdio.h>
 
-// this header would override the default C `assert`;
-// you may refer the "API : MACROS" part for more details.
-#include "aco_assert_override.h"
-
 void foo(int ct) {
     printf("co: %p: yield to main_co: %d\n", aco_get_co(), *((int*)(aco_get_arg())));
     aco_yield();
@@ -423,23 +419,36 @@ These 3 macros are defined in the header `aco.h` and the value of them follows t
 
 ```c
 // provide the compiler with branch prediction information
-#define likely(x)               aco_likely(x)
-#define unlikely(x)             aco_unlikely(x)
+#define aco_likely(x)
+#define aco_unlikely(x)
 
 // override the default `assert` for convenience when coding
-#define assert(EX)              aco_assert(EX)
+#define aco_assert(EX)
 
 // equal to `assert((ptr) != NULL)`
-#define assertptr(ptr)          aco_assertptr(ptr)
+#define aco_assertptr(ptr)
 
 // assert the successful return of memory allocation
-#define assertalloc_bool(b)     aco_assertalloc_bool(b)
-#define assertalloc_ptr(ptr)    aco_assertalloc_ptr(ptr)
+#define aco_assertalloc_bool(b)
+#define aco_assertalloc_ptr(ptr)
+
+// allocate and free memory, aborting on error
+#define aco_mem_new(sz)
+#define aco_mem_newz(sz)
+#define aco_mem_free(ptr)
+
+// allocate memory with a 'guard page'--with some portion of it marked as read-only
+#define aco_alloc_guarded_mem(sz, guardsz)
+#define aco_free_guarded_mem(ptr, sz)
 ```
 
-You could choose to include the header `"aco_assert_override.h"` to override the default C "[assert](http://man7.org/linux/man-pages/man3/assert.3.html)" in the libaco application like [test_aco_synopsis.c](test_aco_synopsis.c) does (this header including should be at the last of the include directives list in the source file because the C "[assert](http://man7.org/linux/man-pages/man3/assert.3.html)" is a C macro definition too) and define the 5 other macros in the above. Please do not include this header in the application source file if you want to use the default C "[assert](http://man7.org/linux/man-pages/man3/assert.3.html)".
+You can override the values of any of these by making a new macro, prefixed with `aco_override_` instead of `aco_`, for example:
 
-For more details you may refer to the source file [aco_assert_override.h](aco_assert_override.h).
+```c
+#define aco_override_mem_new(sz) je_malloc(sz)
+```
+
+Although note that if you override any one of the `mem_new`, `mem_newz`, `mem_free` family, you must override the other two; likewise for `alloc_guarded_mem` and `free_guarded_mem`.  Additionally, you must ensure that the overloaded definitions are present during the compilation of `aco.c`; possibly with the `-D` compiler flag, or by manually adding the definitions themselves to `aco.h`.
 
 # Benchmark
 
@@ -930,8 +939,6 @@ void co_fp1() {
 # TODO
 
 New ideas are welcome!
-
-* Add a macro like `aco_mem_new` which is the combination of something like `p = malloc(sz); assertalloc_ptr(p)`.
 
 * Add a new API `aco_reset` to support the reusability of the coroutine objects.
 

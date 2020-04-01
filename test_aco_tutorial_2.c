@@ -16,7 +16,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
-#include "aco_assert_override.h"
 
 void foo(int ct){
     printf(
@@ -31,9 +30,9 @@ void foo(int ct){
 void co_fp0()
 {
     aco_t* this_co = aco_get_co();
-    assert(!aco_is_main_co(this_co));
-    assert(this_co->fp == (void*)co_fp0);
-    assert(this_co->is_end == 0);
+    aco_assert(!aco_is_main_co(this_co));
+    aco_assert(this_co->fp == (void*)co_fp0);
+    aco_assert(this_co->is_end == 0);
     int ct = 0;
     while(ct < 6){
         foo(ct);
@@ -45,7 +44,7 @@ void co_fp0()
         this_co->share_stack->ptr
     );
     aco_exit();
-    assert(0);
+    aco_assert(0);
 }
 
 int main() {
@@ -61,51 +60,51 @@ int main() {
     aco_thread_init(NULL);
 
     aco_t* main_co = aco_create(NULL, NULL, 0, NULL, NULL);
-    assertptr(main_co);
+    aco_assertptr(main_co);
 
     aco_share_stack_t* sstk = aco_share_stack_new(0);
-    assertptr(sstk);
+    aco_assertptr(sstk);
     aco_share_stack_t* sstk2 = aco_share_stack_new(0);
-    assertptr(sstk2);
+    aco_assertptr(sstk2);
 
     int co_ct_arg_point_to_me = 0;
     int co2_ct_arg_point_to_me = 0;
     int co3_ct_arg_point_to_me = 0;
     aco_t* co = aco_create(main_co, sstk, 0, co_fp0, &co_ct_arg_point_to_me);
-    assertptr(co);
+    aco_assertptr(co);
     aco_t* co2 = aco_create(main_co, sstk2, 0, co_fp0, &co2_ct_arg_point_to_me);
     aco_t* co3 = aco_create(main_co, sstk2, 0, co_fp0, &co3_ct_arg_point_to_me);
-    assertptr(co2);
-    assertptr(co3);
+    aco_assertptr(co2);
+    aco_assertptr(co3);
 
     int ct = 0;
     while(ct < 6){
-        assert(co->is_end == 0);
+        aco_assert(co->is_end == 0);
         aco_resume(co);
-        assert(co_ct_arg_point_to_me == ct);
+        aco_assert(co_ct_arg_point_to_me == ct);
 
-        assert(co2->is_end == 0);
+        aco_assert(co2->is_end == 0);
         aco_resume(co2);
-        assert(co2_ct_arg_point_to_me == ct);
+        aco_assert(co2_ct_arg_point_to_me == ct);
 
-        assert(co3->is_end == 0);
+        aco_assert(co3->is_end == 0);
         aco_resume(co3);
-        assert(co3_ct_arg_point_to_me == ct);
+        aco_assert(co3_ct_arg_point_to_me == ct);
 
         printf("main_co:%p\n", main_co);
         ct++;
     }
     aco_resume(co);
-    assert(co_ct_arg_point_to_me == ct);
-    assert(co->is_end);
+    aco_assert(co_ct_arg_point_to_me == ct);
+    aco_assert(co->is_end);
 
     aco_resume(co2);
-    assert(co2_ct_arg_point_to_me == ct);
-    assert(co2->is_end);
+    aco_assert(co2_ct_arg_point_to_me == ct);
+    aco_assert(co2->is_end);
 
     aco_resume(co3);
-    assert(co3_ct_arg_point_to_me == ct);
-    assert(co3->is_end);
+    aco_assert(co3_ct_arg_point_to_me == ct);
+    aco_assert(co3->is_end);
 
     printf("main_co:%p\n", main_co);
 
