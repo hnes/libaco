@@ -60,6 +60,3 @@ matrix:
             - llvm-toolchain-trusty-3.5
           packages:
             - clang-3.5
-    - os: osx
-      osx_image: xcode8.3
-      compiler: clang
