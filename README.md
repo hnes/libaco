@@ -1,4 +1,4 @@
-# Name
+[![Logo of libaco](https://github.com/libaco/logo/blob/main/web/libaco_logo_blue.svg)](https://libaco.org)
 
 libaco - A blazing fast and lightweight C asymmetric coroutine library.
 
@@ -32,8 +32,6 @@ Note: Please use [releases][github-release] instead of the `master` to build the
 
 # Table of Contents
 
-   * [Name](#name)
-   * [Table of Contents](#table-of-contents)
    * [Status](#status)
    * [Synopsis](#synopsis)
    * [Description](#description)
@@ -66,6 +64,7 @@ Note: Please use [releases][github-release] instead of the `master` to build the
    * [TODO](#todo)
    * [CHANGES](#changes)
    * [Donation](#donation)
+   * [Thanks](#thanks)
 * [Copyright and License](#copyright-and-license)
 
 # Status
@@ -993,6 +992,10 @@ I'm a full-time open source developer. Any amount of the donations will be highl
 * Wechat (微信)
 
 ![qr_wechat](img/qr_wechat.png)
+
+# Thanks
+
+The logo of libaco is generously donated by Peter Bech([Peteck](https://github.com/Peteck)). The logo is licensed under [CC BY-ND 4.0](https://creativecommons.org/licenses/by-nd/4.0/). The website of [libaco.org](https://libaco.org) is also kindly contributed by Peter Bech([Peteck](https://github.com/Peteck)).
 
 # Copyright and License
 
