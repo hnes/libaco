@@ -30,6 +30,10 @@ Note: Please use [releases][github-release] instead of the `master` to build the
 
 [github-release]: https://github.com/hnes/libaco/releases
 
+# Documentation
+
+The documentation, on how to use this library and the design of it, can be found below in this README or at [https://libaco.org/docs](https://libaco.org/docs).
+
 # Table of Contents
 
    * [Status](#status)
