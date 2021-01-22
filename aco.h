@@ -46,6 +46,11 @@ extern "C" {
     #define ACO_REG_IDX_SP 5
     #define ACO_REG_IDX_BP 7
     #define ACO_REG_IDX_FPU 8
+#elif __aarch64__
+    #define ACO_REG_IDX_RETADDR 13
+    #define ACO_REG_IDX_SP 14
+    #define ACO_REG_IDX_BP 12
+    #define ACO_REG_IDX_FPU 15
 #else
     #error "platform no support yet"
 #endif
@@ -98,6 +103,12 @@ struct aco_s{
         void*  reg[8];
     #else
         void*  reg[9];
+    #endif
+#elif __aarch64__
+    #ifdef ACO_CONFIG_SHARE_FPU_MXCSR_ENV
+        void*  reg[15];
+    #else
+        void*  reg[16];
     #endif
 #else
     #error "platform no support yet"

@@ -4,7 +4,9 @@
 #else
 .type  acosw, @function
 #endif
+#ifndef __aarch64__
 .intel_syntax noprefix
+#endif
 acosw:
 /*
     extern void acosw(aco_t* from_co, aco_t* to_co);
@@ -118,6 +120,43 @@ acosw:
 #endif
     mov     rsp,rcx
     jmp     rax
+#elif __aarch64__
+/*
+    0x00         -->            0xff
+    x16 x17 x19  ...  x29 lr sp fpcr
+    0   8   10   ...  60  68 70 78
+*/
+    // r0 - from_co | r1 - to_co
+    mov     x2,  lr
+    stp    x16, x17, [x0, 0x00]
+    stp    x19, x20, [x0, 0x10]
+    stp    x21, x22, [x0, 0x20]
+    stp    x23, x24, [x0, 0x30]
+    stp    x25, x26, [x0, 0x40]
+    stp    x27, x28, [x0, 0x50]
+    stp    x29, lr,  [x0, 0x60]
+    mov     x5,  sp
+    str     x5,  [x0, 0x70]
+#ifndef ACO_CONFIG_SHARE_FPU_MXCSR_ENV
+    mrs     x5,  fpcr
+    str     x5,  [x1, 0x78]
+#endif
+
+    ldp     x16, x17, [x1, 0x00]
+    ldp     x19, x20, [x1, 0x10]
+    ldp     x21, x22, [x1, 0x20]
+    ldp     x23, x24, [x1, 0x30]
+    ldp     x25, x26, [x1, 0x40]
+    ldp     x27, x28, [x1, 0x50]
+    ldp     x29, x30, [x1, 0x60]
+    ldr     x3,  [x1, 0x70]
+    mov     sp,  x3
+#ifndef ACO_CONFIG_SHARE_FPU_MXCSR_ENV
+    ldr     x3,  [x1, 0x78]
+    msr     fpcr,x3
+#endif
+
+    br      x30
 #else
     #error "platform not support"
 #endif
@@ -127,7 +166,9 @@ acosw:
 #else
 .type  aco_save_fpucw_mxcsr, @function
 #endif
+#ifndef __aarch64__
 .intel_syntax noprefix
+#endif
 aco_save_fpucw_mxcsr:
 #ifdef __i386__
     mov     eax,DWORD PTR [esp+0x4]     // ptr
@@ -137,6 +178,10 @@ aco_save_fpucw_mxcsr:
 #elif __x86_64__
     fnstcw  WORD PTR  [rdi]
     stmxcsr DWORD PTR [rdi+0x4]
+    ret
+#elif __aarch64__
+    mrs x1, fpcr
+    str x1, [x0]
     ret
 #else
     #error "platform not support"
@@ -155,7 +200,9 @@ aco_save_fpucw_mxcsr:
 #else
 .type  aco_funcp_protector_asm, @function
 #endif
+#ifndef __aarch64__
 .intel_syntax noprefix
+#endif
 aco_funcp_protector_asm:
 #ifdef __i386__
             and     esp,0xfffffff0
@@ -186,6 +233,13 @@ aco_funcp_protector_asm:
             call    abort
         #endif
     #endif
+            ret
+#elif __aarch64__
+            mov     x9, sp
+            and     x9, x9, #0xfffffffffffffff0
+            mov     sp, x9
+            bl      aco_funcp_protector
+            bl      abort
             ret
 #else
     #error "platform not support"

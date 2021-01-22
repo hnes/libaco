@@ -24,7 +24,7 @@
 void aco_runtime_test(void){
 #ifdef __i386__
     _Static_assert(sizeof(void*) == 4, "require 'sizeof(void*) == 4'");
-#elif  __x86_64__
+#elif  defined(__x86_64__) || defined(__aarch64__)
     _Static_assert(sizeof(void*) == 8, "require 'sizeof(void*) == 8'");
     _Static_assert(sizeof(__uint128_t) == 16, "require 'sizeof(__uint128_t) == 16'");
 #else
@@ -171,7 +171,7 @@ static __thread aco_cofuncp_t aco_gtls_last_word_fp = aco_default_protector_last
 
 #ifdef __i386__
     static __thread void* aco_gtls_fpucw_mxcsr[2];
-#elif  __x86_64__
+#elif  defined(__x86_64__) || defined(__aarch64__)
     static __thread void* aco_gtls_fpucw_mxcsr[1];
 #else
     #error "platform no support yet"
@@ -273,11 +273,16 @@ aco_share_stack_t* aco_share_stack_new2(size_t sz, char guard_page_enabled){
         p->ptr, (void*)((uintptr_t)p->ptr + p->sz)
     );
 #endif
-#if defined(__i386__) || defined(__x86_64__)
+#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
     uintptr_t u_p = (uintptr_t)(p->sz - (sizeof(void*) << 1) + (uintptr_t)p->ptr);
     u_p = (u_p >> 4) << 4;
     p->align_highptr = (void*)u_p;
+#ifdef __aarch64__
+    // aarch64 hardware-enforces 16 byte stack alignment
+    p->align_retptr  = (void*)(u_p - 16);
+#else
     p->align_retptr  = (void*)(u_p - sizeof(void*));
+#endif
     *((void**)(p->align_retptr)) = (void*)(aco_funcp_protector_asm);
     assert(p->sz > (16 + (sizeof(void*) << 1) + sizeof(void*)));
     p->align_limit = p->sz - 16 - (sizeof(void*) << 1);
@@ -331,6 +336,12 @@ aco_t* aco_create(
         #ifndef ACO_CONFIG_SHARE_FPU_MXCSR_ENV
             p->reg[ACO_REG_IDX_FPU] = aco_gtls_fpucw_mxcsr[0];
         #endif
+#elif  __aarch64__
+        p->reg[ACO_REG_IDX_RETADDR] = (void*)fp;
+        p->reg[ACO_REG_IDX_SP] = p->share_stack->align_retptr;
+        #ifndef ACO_CONFIG_SHARE_FPU_MXCSR_ENV
+            p->reg[ACO_REG_IDX_FPU] = aco_gtls_fpucw_mxcsr[0];
+        #endif
 #else
         #error "platform no support yet"
 #endif
@@ -343,7 +354,7 @@ aco_t* aco_create(
         p->save_stack.ptr = malloc(save_stack_sz);
         assertalloc_ptr(p->save_stack.ptr);
         p->save_stack.sz = save_stack_sz;
-#if defined(__i386__) || defined(__x86_64__)
+#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
         p->save_stack.valid_sz = 0;
 #else
         #error "platform no support yet"
@@ -369,7 +380,7 @@ void aco_resume(aco_t* resume_co){
         if(resume_co->share_stack->owner != NULL){
             aco_t* owner_co = resume_co->share_stack->owner;
             assert(owner_co->share_stack == resume_co->share_stack);
-#if defined(__i386__) || defined(__x86_64__)
+#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
             assert(
                 (
                     (uintptr_t)(owner_co->share_stack->align_retptr)
@@ -430,7 +441,7 @@ void aco_resume(aco_t* resume_co){
 #endif
         }
         assert(resume_co->share_stack->owner == NULL);
-#if defined(__i386__) || defined(__x86_64__)
+#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
         assert(
             resume_co->save_stack.valid_sz
             <=
