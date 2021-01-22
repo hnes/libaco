@@ -26,7 +26,7 @@ The phrase "*fastest*" in above means the fastest context switching implementati
 
 Issues and PRs are welcome 🎉🎉🎉
 
-Besides this README, you could also visit the documentation from [https://libaco.org/docs](https://libaco.org/docs). Please follow this README if there are any differences because the documentation on the website may be lagging behind from this README.
+Besides this readme, you could also visit the documentation from [https://libaco.org/docs](https://libaco.org/docs). Please follow this readme if there are any differences because the documentation on the website may be lagging behind from this readme.
 
 Note: Please use [releases][github-release] instead of the `master` to build the final binary.
 
