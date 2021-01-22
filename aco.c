@@ -244,9 +244,8 @@ aco_share_stack_t* aco_share_stack_new2(size_t sz, char guard_page_enabled){
         }
     }
 
-    aco_share_stack_t* p = (aco_share_stack_t*)malloc(sizeof(aco_share_stack_t));
-    assertalloc_ptr(p);
-    memset(p, 0, sizeof(aco_share_stack_t));
+    aco_share_stack_t* p;
+    aco_mem_calloc(p, 1);
 
     if(guard_page_enabled != 0){
         p->real_ptr = mmap(
@@ -263,8 +262,7 @@ aco_share_stack_t* aco_share_stack_new2(size_t sz, char guard_page_enabled){
     } else {
         //p->guard_page_enabled = 0;
         p->sz = sz;
-        p->ptr = malloc(sz);
-        assertalloc_ptr(p->ptr);
+        aco_mem_new(p->ptr, sz);
     }
 
     p->owner = NULL;
@@ -308,9 +306,8 @@ aco_t* aco_create(
         size_t save_stack_sz, aco_cofuncp_t fp, void* arg
     ){
 
-    aco_t* p = (aco_t*)malloc(sizeof(aco_t));
-    assertalloc_ptr(p);
-    memset(p, 0, sizeof(aco_t));
+    aco_t* p;
+    aco_mem_calloc(p, 1);
 
     if(main_co != NULL){ // non-main co
         assertptr(share_stack);
@@ -340,8 +337,7 @@ aco_t* aco_create(
         if(save_stack_sz == 0){
             save_stack_sz = 64;
         }
-        p->save_stack.ptr = malloc(save_stack_sz);
-        assertalloc_ptr(p->save_stack.ptr);
+        aco_mem_new(p->save_stack.ptr, save_stack_sz);
         p->save_stack.sz = save_stack_sz;
 #if defined(__i386__) || defined(__x86_64__)
         p->save_stack.valid_sz = 0;
@@ -399,8 +395,7 @@ void aco_resume(aco_t* resume_co){
                         break;
                     }
                 }
-                owner_co->save_stack.ptr = malloc(owner_co->save_stack.sz);
-                assertalloc_ptr(owner_co->save_stack.ptr);
+                aco_mem_new(owner_co->save_stack.ptr, owner_co->save_stack.sz);
             }
             // TODO: optimize the performance penalty of memcpy function call
             //   for very short memory span
