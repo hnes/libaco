@@ -50,6 +50,7 @@ Besides this readme, you could also visit the documentation from [https://libaco
       * [aco_create](#aco_create)
       * [aco_resume](#aco_resume)
       * [aco_yield](#aco_yield)
+      * [aco_yield_to](#aco_yield_to)
       * [aco_get_co](#aco_get_co)
       * [aco_get_arg](#aco_get_arg)
       * [aco_exit](#aco_exit)
@@ -266,7 +267,7 @@ One of the rules in libaco is to call `aco_exit()` to terminate the execution of
 
 You could also define your own protector to substitute the default one (to do some customized "last words" stuff). But no matter in what case, the process will be aborted after the protector was executed. The `test_aco_tutorial_5.c` shows how to define the customized last word function.
 
-The last example is a simple coroutine scheduler in `test_aco_tutorial_6.c`.
+The example `test_aco_tutorial_6.c` is a simple coroutine scheduler. And the last example, namely `test_aco_tutorial_7.c`, is the same scheduler using `aco_yield_to`.
 
 # API
 
@@ -375,6 +376,18 @@ void aco_yield();
 Yield the execution of `co` and resume `co->main_co`. The caller of this function must be a non-main co. And `co->main_co` must not be NULL.
 
 After the call of `aco_yield`, we name the state of the caller — `co` as "yielded".
+
+## aco_yield_to
+
+```c
+void aco_yield_to(aco_t* resume_co);
+```
+
+Yield the execution of `co` and resume `resume_co`. The caller of this function must be a non-main co (i.e. `co->main_co` is not NULL). If `co` is different of `resume_co`, they cannot share the same stack and `co->main_co` and `resume_co->main_co` must be equal.
+
+After the call of `aco_yield_to`, we name the state of the caller — `co` as "yielded".
+
+`aco_yield_to()` is useful when a non-main co wants to yield to another co with a single context switch. Without `aco_yield_to()`, one has to go through two switches: one switch back to main co and another switch to the desired non-main co.
 
 ## aco_get_co
 
