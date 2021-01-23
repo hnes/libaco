@@ -18,11 +18,10 @@
 #include <string.h>
 #include <stdint.h>
 #include <limits.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
-#include <sys/mman.h>
 
 #ifdef ACO_USE_VALGRIND
     #include <valgrind/valgrind.h>
@@ -112,29 +111,88 @@ struct aco_s{
     aco_share_stack_t* share_stack;
 };
 
-#define aco_likely(x) (__builtin_expect(!!(x), 1))
+#ifdef aco_override_likely
+    #define aco_likely(x) aco_override_likely(x)
+#else
+    #define aco_likely(x) (__builtin_expect(!!(x), 1))
+#endif
 
-#define aco_unlikely(x) (__builtin_expect(!!(x), 0))
+#ifdef aco_override_unlikely
+    #define aco_unlikely(x) aco_override_unlikely(x)
+#else
+    #define aco_unlikely(x) (__builtin_expect(!!(x), 0))
+#endif
 
-#define aco_assert(EX)  ((aco_likely(EX))?((void)0):(abort()))
+#ifdef aco_override_assert
+    #define aco_assert(EX)  aco_override_assert(EX)
+#else
+    #define aco_assert(EX)  ((aco_likely(EX))?((void)0):(abort()))
+#endif
 
-#define aco_assertptr(ptr)  ((aco_likely((ptr) != NULL))?((void)0):(abort()))
+#ifdef aco_override_assertptr
+    #define aco_assertptr(ptr)  aco_override_assertptr(ptr)
+#else
+    #define aco_assertptr(ptr)  ((aco_likely((ptr) != NULL))?((void)0):(abort()))
+#endif
 
-#define aco_assertalloc_bool(b)  do {  \
-    if(aco_unlikely(!(b))){    \
-        fprintf(stderr, "Aborting: failed to allocate memory: %s:%d:%s\n", \
-            __FILE__, __LINE__, __PRETTY_FUNCTION__);    \
-        abort();    \
-    }   \
-} while(0)
+#ifdef aco_override_assertalloc_bool
+    #define aco_assertalloc_bool(b)  aco_override_assertalloc_bool(b)
+#else
+    #define aco_assertalloc_bool(b)  do {  \
+        if(aco_unlikely(!(b))){    \
+            fprintf(stderr, "Aborting: failed to allocate memory: %s:%d:%s\n", \
+                __FILE__, __LINE__, __PRETTY_FUNCTION__);    \
+            abort();    \
+        }   \
+    } while(0)
+#endif
 
-#define aco_assertalloc_ptr(ptr)  do {  \
-    if(aco_unlikely((ptr) == NULL)){    \
-        fprintf(stderr, "Aborting: failed to allocate memory: %s:%d:%s\n", \
-            __FILE__, __LINE__, __PRETTY_FUNCTION__);    \
-        abort();    \
-    }   \
-} while(0)
+#ifdef aco_override_assertalloc_ptr
+    #define aco_assertalloc_ptr(ptr)  aco_override_assertalloc_ptr(ptr)
+#else
+    #define aco_assertalloc_ptr(ptr)  do {  \
+        if(aco_unlikely((ptr) == NULL)){    \
+            fprintf(stderr, "Aborting: failed to allocate memory: %s:%d:%s\n", \
+                __FILE__, __LINE__, __PRETTY_FUNCTION__);    \
+            abort();    \
+        }   \
+    } while(0)
+#endif
+
+#if defined(aco_override_mem_new) || defined(aco_override_mem_newz) || \
+    defined(aco_override_mem_free)
+    // all must be overridden, or none of them
+    #if !defined(aco_override_mem_new) || !defined(aco_override_mem_newz) || \
+        !defined(aco_override_mem_free)
+        #error "must define all of aco_override_mem_new, aco_override_mem_newz,"\
+               " and aco_override_mem_free, or none of them"
+    #endif
+
+    #define aco_mem_new(sz)    aco_override_mem_new(sz)
+    #define aco_mem_newz(sz)   aco_override_mem_newz(sz)
+    #define aco_mem_free(ptr)  aco_override_mem_free(ptr)
+#else
+    #define aco_mem_new(sz)    aco_default_mem_new(sz)
+    #define aco_mem_newz(sz)   aco_default_mem_newz(sz)
+    #define aco_mem_free(ptr)  aco_default_mem_free(ptr)
+#endif
+
+#if defined(aco_override_alloc_guarded_mem) || \
+    defined(aco_override_free_guarded_mem)
+    // ditto
+    #if !defined(aco_override_alloc_guarded_mem) || \
+        !defined(aco_override_free_guarded_mem)
+        #error "must define both of aco_override_alloc_guarded_mem and" \
+               " aco_override_free_guarded_mem, or neither of them"
+    #endif
+
+    #define aco_alloc_guarded_mem(sz, guardsz) aco_override_alloc_guarded_mem(sz, guardsz)
+    #define aco_free_guarded_mem(ptr, sz)      aco_override_free_guarded_mem(ptr, sz)
+#else
+    #define aco_alloc_guarded_mem(sz, guardsz) aco_default_alloc_guarded_mem(sz, guardsz)
+    #define aco_free_guarded_mem(ptr, sz)      aco_assert(0 == munmap(ptr, sz))
+#endif
+
 
 #if defined(aco_attr_no_asan)
     #error "aco_attr_no_asan already defined"

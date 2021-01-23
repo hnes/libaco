@@ -172,7 +172,6 @@ then
     version_check_tmpfile="$version_check_tmpdir"/tmp.c
     echo '''        #include "aco.h"
         #include <stdio.h>
-        #include "aco_assert_override.h"
 
         int main() {''' > $version_check_tmpfile
     echo "        assert(ACO_VERSION_MAJOR == $version_major);" \

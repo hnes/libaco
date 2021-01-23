@@ -19,8 +19,6 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#include "aco_assert_override.h"
-
 void foo(int ct){
     printf(
         "co:%p save_stack:%p share_stack:%p yield_ct:%d\n",
@@ -34,9 +32,9 @@ void foo(int ct){
 void co_fp0()
 {
     aco_t* this_co = aco_get_co();
-    assert(!aco_is_main_co(this_co));
-    assert(this_co->fp == (void*)co_fp0);
-    assert(this_co->is_end == 0);
+    aco_assert(!aco_is_main_co(this_co));
+    aco_assert(this_co->fp == (void*)co_fp0);
+    aco_assert(this_co->is_end == 0);
     int ct = 0;
     while(ct < 6){
         foo(ct);
@@ -50,7 +48,7 @@ void co_fp0()
     printf("Intended to Abort to test the aco protector :)\n");
     return;
     aco_exit();
-    assert(0);
+    aco_assert(0);
 }
 
 static void co_protector_last_word(){
@@ -59,7 +57,7 @@ static void co_protector_last_word(){
     fprintf(stderr,"error: customized co_protector_last_word triggered \n");
     fprintf(stderr, "error: co:%p should call `aco_exit(co)` instead of direct "
         "`return` in co_fp:%p to finish its execution\n", co, (void*)co->fp);
-    assert(0);
+    aco_assert(0);
 }
 
 int main() {
@@ -75,27 +73,27 @@ int main() {
     aco_thread_init(co_protector_last_word);
 
     aco_t* main_co = aco_create(NULL, NULL, 0, NULL, NULL);
-    assertptr(main_co);
+    aco_assertptr(main_co);
 
     aco_share_stack_t* sstk = aco_share_stack_new(0);
-    assertptr(sstk);
+    aco_assertptr(sstk);
 
     int co_ct_arg_point_to_me = 0;
     aco_t* co = aco_create(main_co, sstk, 0, co_fp0, &co_ct_arg_point_to_me);
-    assertptr(co);
+    aco_assertptr(co);
 
     int ct = 0;
     while(ct < 6){
-        assert(co->is_end == 0);
+        aco_assert(co->is_end == 0);
         aco_resume(co);
-        assert(co_ct_arg_point_to_me == ct);
+        aco_assert(co_ct_arg_point_to_me == ct);
 
         printf("main_co:%p\n", main_co);
         ct++;
     }
     aco_resume(co);
-    assert(co_ct_arg_point_to_me == ct);
-    assert(co->is_end);
+    aco_assert(co_ct_arg_point_to_me == ct);
+    aco_assert(co->is_end);
 
     printf("main_co:%p\n", main_co);
 
