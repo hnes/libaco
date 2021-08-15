@@ -186,6 +186,9 @@ extern __thread aco_t* aco_gtls_co;
 aco_attr_no_asan
 extern void aco_resume(aco_t* resume_co);
 
+/* Return 1 if the function is directly called by main co; 0 is called by non-main co*/
+extern int aco_is_in_main_co(void);
+
 //extern void aco_yield1(aco_t* yield_co);
 #define aco_yield1(yield_co) do {             \
     aco_assertptr((yield_co));                    \
