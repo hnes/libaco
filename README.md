@@ -334,7 +334,7 @@ Be sure that all the co whose share stack is `sstk` is already destroyed when yo
 
 ```c
 typedef void (*aco_cofuncp_t)(void);
-aco_t* aco_create(aco_t* main_co，aco_share_stack_t* share_stack, 
+aco_t* aco_create(aco_t* main_co, aco_share_stack_t* share_stack, 
         size_t save_stack_sz, aco_cofuncp_t co_fp, void* arg);
 ```
 
