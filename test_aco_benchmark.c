@@ -19,7 +19,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
-#include "aco_assert_override.h"
 
 aco_cofuncp_t gl_co_fp;
 
@@ -29,9 +28,9 @@ char gl_benchmark_print_str_buf[64];
 void co_fp_alloca(){
     size_t sz = (size_t)((uintptr_t)aco_get_arg());
     uint8_t* ptr = NULL;
-    assert(sz > 0);
+    aco_assert(sz > 0);
     ptr = alloca(sz);
-    assertptr(ptr);
+    aco_assertptr(ptr);
     memset(ptr, 0, sz);
     while(1){
         aco_yield();
@@ -94,16 +93,16 @@ void benchmark_copystack(size_t co_amount,size_t stksz, size_t loopct){
     int print_sz = 0;
     double delta_t;
     // create co
-    assert(co_amount > 0);
-    assertptr((void*)gl_co_fp);
+    aco_assert(co_amount > 0);
+    aco_assertptr((void*)gl_co_fp);
     aco_t* main_co = aco_create(NULL, NULL, 0, NULL, NULL);
     aco_share_stack_t* sstk = aco_share_stack_new(0);
     // NOTE: size_t_safe_mul
     aco_t** coarray = (aco_t**) malloc(sizeof(void*) * co_amount);
-    assertptr(coarray);
+    aco_assertptr(coarray);
     memset(coarray, 0, sizeof(void*) * co_amount);
     size_t ct = 0;
-    assert(0 == clock_gettime(CLOCK_MONOTONIC, &tstart));
+    aco_assert(0 == clock_gettime(CLOCK_MONOTONIC, &tstart));
     while(ct < co_amount){
         coarray[ct] = aco_create(
             main_co, sstk, 0, gl_co_fp, 
@@ -111,7 +110,7 @@ void benchmark_copystack(size_t co_amount,size_t stksz, size_t loopct){
         );
         ct++;
     }
-    assert(0 == clock_gettime(CLOCK_MONOTONIC, &tend));
+    aco_assert(0 == clock_gettime(CLOCK_MONOTONIC, &tend));
     delta_t = ((double)tend.tv_sec + 1.0e-9*tend.tv_nsec) -
         ((double)tstart.tv_sec + 1.0e-9*tstart.tv_nsec);
     //aco_create/init_save_stk_sz=64B    10000000   140.43 ns/op     7126683.67 op/s
@@ -119,7 +118,7 @@ void benchmark_copystack(size_t co_amount,size_t stksz, size_t loopct){
         gl_benchmark_print_str_buf, PRINT_BUF_SZ, 
         "aco_create/init_save_stk_sz=64B"
     );
-    assert(print_sz > 0 && print_sz < PRINT_BUF_SZ);
+    aco_assert(print_sz > 0 && print_sz < PRINT_BUF_SZ);
     printf("%-50s %11zu %9.3f s %11.2f ns/op %13.2f op/s\n", 
         gl_benchmark_print_str_buf,
         co_amount, delta_t,
@@ -133,7 +132,7 @@ void benchmark_copystack(size_t co_amount,size_t stksz, size_t loopct){
         ct++;
     }
     // copystack ctxsw
-    assert(0 == clock_gettime(CLOCK_MONOTONIC, &tstart));
+    aco_assert(0 == clock_gettime(CLOCK_MONOTONIC, &tstart));
     size_t glct = 0;
     while(glct < loopct){
         ct = 0;
@@ -143,7 +142,7 @@ void benchmark_copystack(size_t co_amount,size_t stksz, size_t loopct){
             glct++;
         }
     }
-    assert(0 == clock_gettime(CLOCK_MONOTONIC, &tend));    
+    aco_assert(0 == clock_gettime(CLOCK_MONOTONIC, &tend));    
     delta_t = ((double)tend.tv_sec + 1.0e-9*tend.tv_nsec) -
         ((double)tstart.tv_sec + 1.0e-9*tstart.tv_nsec);
     //aco_resume/copy_stack_size=8B      20000000    36.23 ns/op    27614644.57 op/s    
@@ -152,7 +151,7 @@ void benchmark_copystack(size_t co_amount,size_t stksz, size_t loopct){
         "aco_resume/co_amount=%zu/copy_stack_size=%zuB",
         co_amount, coarray[0]->save_stack.max_cpsz
     );
-    assert(print_sz > 0 && print_sz < PRINT_BUF_SZ);
+    aco_assert(print_sz > 0 && print_sz < PRINT_BUF_SZ);
     printf("%-50s %11zu %9.3f s %11.2f ns/op %13.2f op/s\n",
         gl_benchmark_print_str_buf, glct, 
         delta_t, (1.0e+9) / (glct / delta_t), 
@@ -165,14 +164,14 @@ void benchmark_copystack(size_t co_amount,size_t stksz, size_t loopct){
     }
     fflush(stdout);
     // co cleaning
-    assert(0 == clock_gettime(CLOCK_MONOTONIC, &tstart));
+    aco_assert(0 == clock_gettime(CLOCK_MONOTONIC, &tstart));
     ct = 0;
     while(ct < co_amount){
         aco_destroy(coarray[ct]);
         coarray[ct] = NULL;
         ct++;
     }
-    assert(0 == clock_gettime(CLOCK_MONOTONIC, &tend));
+    aco_assert(0 == clock_gettime(CLOCK_MONOTONIC, &tend));
     aco_share_stack_destroy(sstk);
     sstk = NULL;
     aco_destroy(main_co);
@@ -185,7 +184,7 @@ void benchmark_copystack(size_t co_amount,size_t stksz, size_t loopct){
         gl_benchmark_print_str_buf, PRINT_BUF_SZ, 
         "aco_destroy"
     );
-    assert(print_sz > 0 && print_sz < PRINT_BUF_SZ);
+    aco_assert(print_sz > 0 && print_sz < PRINT_BUF_SZ);
     printf("%-50s %11zu %9.3f s %11.2f ns/op %13.2f op/s\n\n", 
         gl_benchmark_print_str_buf,
         co_amount, delta_t, 

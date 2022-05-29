@@ -14,7 +14,6 @@
 
 #include "aco.h"    
 #include <stdio.h>
-#include "aco_assert_override.h"
 
 void foo(int ct) {
     printf("co: %p: yield to main_co: %d\n", aco_get_co(), *((int*)(aco_get_arg())));
@@ -44,16 +43,16 @@ int main() {
 
     int ct = 0;
     while(ct < 6){
-        assert(co->is_end == 0);
+        aco_assert(co->is_end == 0);
         printf("main_co: yield to co: %p: %d\n", co, ct);
         aco_resume(co);
-        assert(co_ct_arg_point_to_me == ct);
+        aco_assert(co_ct_arg_point_to_me == ct);
         ct++;
     }
     printf("main_co: yield to co: %p: %d\n", co, ct);
     aco_resume(co);
-    assert(co_ct_arg_point_to_me == ct);
-    assert(co->is_end);
+    aco_assert(co_ct_arg_point_to_me == ct);
+    aco_assert(co->is_end);
 
     printf("main_co: destroy and exit\n");
     aco_destroy(co);
