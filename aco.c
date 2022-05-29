@@ -490,3 +490,8 @@ void aco_destroy(aco_t* co){
         free(co);
     }
 }
+
+int aco_is_in_main_co(void){
+    if(aco_gtls_co->main_co == NULL || aco_gtls_co == NULL) return 1;
+    else return 0;
+}
