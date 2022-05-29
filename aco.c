@@ -361,119 +361,155 @@ aco_t* aco_create(
 }
 
 aco_attr_no_asan
+static void aco_own_stack(aco_t* co){
+    if(co->share_stack->owner != NULL){
+        aco_t* owner_co = co->share_stack->owner;
+        assert(owner_co->share_stack == co->share_stack);
+#if defined(__i386__) || defined(__x86_64__)
+        assert(
+            (
+                (uintptr_t)(owner_co->share_stack->align_retptr)
+                >=
+                (uintptr_t)(owner_co->reg[ACO_REG_IDX_SP])
+            )
+            &&
+            (
+                (uintptr_t)(owner_co->share_stack->align_highptr)
+                -
+                (uintptr_t)(owner_co->share_stack->align_limit)
+                <=
+                (uintptr_t)(owner_co->reg[ACO_REG_IDX_SP])
+            )
+        );
+        owner_co->save_stack.valid_sz =
+            (uintptr_t)(owner_co->share_stack->align_retptr)
+            -
+            (uintptr_t)(owner_co->reg[ACO_REG_IDX_SP]);
+        if(owner_co->save_stack.sz < owner_co->save_stack.valid_sz){
+            free(owner_co->save_stack.ptr);
+            owner_co->save_stack.ptr = NULL;
+            while(1){
+                owner_co->save_stack.sz = owner_co->save_stack.sz << 1;
+                assert(owner_co->save_stack.sz > 0);
+                if(owner_co->save_stack.sz >= owner_co->save_stack.valid_sz){
+                    break;
+                }
+            }
+            owner_co->save_stack.ptr = malloc(owner_co->save_stack.sz);
+            assertalloc_ptr(owner_co->save_stack.ptr);
+        }
+        // TODO: optimize the performance penalty of memcpy function call
+        //   for very short memory span
+        if(owner_co->save_stack.valid_sz > 0) {
+#ifdef __x86_64__
+            aco_amd64_optimized_memcpy_drop_in(
+                owner_co->save_stack.ptr,
+                owner_co->reg[ACO_REG_IDX_SP],
+                owner_co->save_stack.valid_sz
+            );
+#else
+            memcpy(
+                owner_co->save_stack.ptr,
+                owner_co->reg[ACO_REG_IDX_SP],
+                owner_co->save_stack.valid_sz
+            );
+#endif
+            owner_co->save_stack.ct_save++;
+        }
+        if(owner_co->save_stack.valid_sz > owner_co->save_stack.max_cpsz){
+            owner_co->save_stack.max_cpsz = owner_co->save_stack.valid_sz;
+        }
+        owner_co->share_stack->owner = NULL;
+        owner_co->share_stack->align_validsz = 0;
+#else
+        #error "platform no support yet"
+#endif
+    }
+    assert(co->share_stack->owner == NULL);
+#if defined(__i386__) || defined(__x86_64__)
+    assert(
+        co->save_stack.valid_sz
+        <=
+        co->share_stack->align_limit - sizeof(void*)
+    );
+    // TODO: optimize the performance penalty of memcpy function call
+    //   for very short memory span
+    if(co->save_stack.valid_sz > 0) {
+#ifdef __x86_64__
+        aco_amd64_optimized_memcpy_drop_in(
+            (void*)(
+                (uintptr_t)(co->share_stack->align_retptr)
+                -
+                co->save_stack.valid_sz
+            ),
+            co->save_stack.ptr,
+            co->save_stack.valid_sz
+        );
+#else
+        memcpy(
+            (void*)(
+                (uintptr_t)(co->share_stack->align_retptr)
+                -
+                co->save_stack.valid_sz
+            ),
+            co->save_stack.ptr,
+            co->save_stack.valid_sz
+        );
+#endif
+        co->save_stack.ct_restore++;
+    }
+    if(co->save_stack.valid_sz > co->save_stack.max_cpsz){
+        co->save_stack.max_cpsz = co->save_stack.valid_sz;
+    }
+    co->share_stack->align_validsz = co->save_stack.valid_sz + sizeof(void*);
+    co->share_stack->owner = co;
+#else
+    #error "platform no support yet"
+#endif
+}
+
+aco_attr_no_asan
 void aco_resume(aco_t* resume_co){
     assert(resume_co != NULL && resume_co->main_co != NULL
         && resume_co->is_end == 0
     );
     if(resume_co->share_stack->owner != resume_co){
-        if(resume_co->share_stack->owner != NULL){
-            aco_t* owner_co = resume_co->share_stack->owner;
-            assert(owner_co->share_stack == resume_co->share_stack);
-#if defined(__i386__) || defined(__x86_64__)
-            assert(
-                (
-                    (uintptr_t)(owner_co->share_stack->align_retptr)
-                    >=
-                    (uintptr_t)(owner_co->reg[ACO_REG_IDX_SP])
-                )
-                &&
-                (
-                    (uintptr_t)(owner_co->share_stack->align_highptr)
-                    -
-                    (uintptr_t)(owner_co->share_stack->align_limit)
-                    <=
-                    (uintptr_t)(owner_co->reg[ACO_REG_IDX_SP])
-                )
-            );
-            owner_co->save_stack.valid_sz =
-                (uintptr_t)(owner_co->share_stack->align_retptr)
-                -
-                (uintptr_t)(owner_co->reg[ACO_REG_IDX_SP]);
-            if(owner_co->save_stack.sz < owner_co->save_stack.valid_sz){
-                free(owner_co->save_stack.ptr);
-                owner_co->save_stack.ptr = NULL;
-                while(1){
-                    owner_co->save_stack.sz = owner_co->save_stack.sz << 1;
-                    assert(owner_co->save_stack.sz > 0);
-                    if(owner_co->save_stack.sz >= owner_co->save_stack.valid_sz){
-                        break;
-                    }
-                }
-                owner_co->save_stack.ptr = malloc(owner_co->save_stack.sz);
-                assertalloc_ptr(owner_co->save_stack.ptr);
-            }
-            // TODO: optimize the performance penalty of memcpy function call
-            //   for very short memory span
-            if(owner_co->save_stack.valid_sz > 0) {
-    #ifdef __x86_64__
-                aco_amd64_optimized_memcpy_drop_in(
-                    owner_co->save_stack.ptr,
-                    owner_co->reg[ACO_REG_IDX_SP],
-                    owner_co->save_stack.valid_sz
-                );
-    #else
-                memcpy(
-                    owner_co->save_stack.ptr,
-                    owner_co->reg[ACO_REG_IDX_SP],
-                    owner_co->save_stack.valid_sz
-                );
-    #endif
-                owner_co->save_stack.ct_save++;
-            }
-            if(owner_co->save_stack.valid_sz > owner_co->save_stack.max_cpsz){
-                owner_co->save_stack.max_cpsz = owner_co->save_stack.valid_sz;
-            }
-            owner_co->share_stack->owner = NULL;
-            owner_co->share_stack->align_validsz = 0;
-#else
-            #error "platform no support yet"
-#endif
-        }
-        assert(resume_co->share_stack->owner == NULL);
-#if defined(__i386__) || defined(__x86_64__)
-        assert(
-            resume_co->save_stack.valid_sz
-            <=
-            resume_co->share_stack->align_limit - sizeof(void*)
-        );
-        // TODO: optimize the performance penalty of memcpy function call
-        //   for very short memory span
-        if(resume_co->save_stack.valid_sz > 0) {
-    #ifdef __x86_64__
-            aco_amd64_optimized_memcpy_drop_in(
-                (void*)(
-                    (uintptr_t)(resume_co->share_stack->align_retptr)
-                    -
-                    resume_co->save_stack.valid_sz
-                ),
-                resume_co->save_stack.ptr,
-                resume_co->save_stack.valid_sz
-            );
-    #else
-            memcpy(
-                (void*)(
-                    (uintptr_t)(resume_co->share_stack->align_retptr)
-                    -
-                    resume_co->save_stack.valid_sz
-                ),
-                resume_co->save_stack.ptr,
-                resume_co->save_stack.valid_sz
-            );
-    #endif
-            resume_co->save_stack.ct_restore++;
-        }
-        if(resume_co->save_stack.valid_sz > resume_co->save_stack.max_cpsz){
-            resume_co->save_stack.max_cpsz = resume_co->save_stack.valid_sz;
-        }
-        resume_co->share_stack->align_validsz = resume_co->save_stack.valid_sz + sizeof(void*);
-        resume_co->share_stack->owner = resume_co;
-#else
-        #error "platform no support yet"
-#endif
+        aco_own_stack(resume_co);
     }
     aco_gtls_co = resume_co;
     acosw(resume_co->main_co, resume_co);
     aco_gtls_co = resume_co->main_co;
+}
+
+aco_attr_no_asan
+void aco_yield_to(aco_t* resume_co){
+    if(aco_unlikely(resume_co == NULL || resume_co->main_co == NULL
+        || resume_co->is_end != 0)){
+        // An error message here is helpful because
+        // we are running in a non-main co
+        fprintf(stderr, "Aborting: %s(resume_co=%p): resume_co is not valid: %s:%d\n",
+            __PRETTY_FUNCTION__, resume_co, __FILE__, __LINE__);
+        abort();
+    }
+    aco_t* yield_co = aco_gtls_co;
+    if(aco_unlikely(resume_co == yield_co)){
+        // Nothing to do
+        return;
+    }
+    if(aco_unlikely(resume_co->main_co != yield_co->main_co
+        // A co cannot save its own stack
+        || resume_co->share_stack == yield_co->share_stack)){
+        fprintf(stderr, "Aborting: %s(resume_co=%p): resume_co has a different main co or share the same stack: %s:%d\n",
+            __PRETTY_FUNCTION__, resume_co, __FILE__, __LINE__);
+        abort();
+    }
+    // The test below is unlikely because
+    // aco_yield_to() is often called between two non-main cos
+    if(aco_unlikely(resume_co->share_stack->owner != resume_co)){
+        aco_own_stack(resume_co);
+    }
+    aco_gtls_co = resume_co;
+    acosw(yield_co, resume_co);
 }
 
 void aco_destroy(aco_t* co){

@@ -30,6 +30,7 @@ test_aco_tutorial_3 -lpthread
 test_aco_tutorial_4
 test_aco_tutorial_5
 test_aco_tutorial_6
+test_aco_tutorial_7
 test_aco_synopsis
 test_aco_benchmark
 '''
