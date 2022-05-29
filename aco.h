@@ -221,6 +221,19 @@ extern void aco_destroy(aco_t* co);
 } while(0)
 
 #ifdef __cplusplus
+# error "Malloc break C++ code"
+#else
+# define aco_mem_new(ptr, size) do { \
+    ptr = malloc(size); \
+    assertalloc_ptr(ptr); \
+} while (0);
+# define aco_mem_calloc(ptr, count) do { \
+    ptr = calloc(count, sizeof(*ptr)); \
+    assertalloc_ptr(ptr); \
+} while (0);
+#endif
+
+#ifdef __cplusplus
 }
 #endif
 
